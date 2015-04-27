@@ -1,0 +1,9 @@
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\bin\Debug\procon26_kyogi.exe.config
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\bin\Debug\procon26_kyogi.exe
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\bin\Debug\procon26_kyogi.pdb
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.csprojResolveAssemblyReference.cache
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.Properties.Resources.resources
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.csproj.GenerateResource.Cache
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.exe
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.pdb
+c:\users\ujihira\documents\visual studio 2013\Projects\procon26_kyogi\obj\Debug\procon26_kyogi.Form1.resources
