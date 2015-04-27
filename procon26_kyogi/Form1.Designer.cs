@@ -88,6 +88,7 @@
       this.Name = "Form1";
       this.Tag = "";
       this.Text = "procon26_kyogi";
+      this.Load += new System.EventHandler(this.Form1_Load);
       this.tabControl1.ResumeLayout(false);
       this.tabPage2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
