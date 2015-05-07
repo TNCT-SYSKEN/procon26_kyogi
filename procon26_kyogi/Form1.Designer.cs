@@ -35,6 +35,9 @@
       this.button2 = new System.Windows.Forms.Button();
       this.button1 = new System.Windows.Forms.Button();
       this.pictureBox2 = new System.Windows.Forms.PictureBox();
+      this.button3 = new System.Windows.Forms.Button();
+      this.button4 = new System.Windows.Forms.Button();
+      this.button5 = new System.Windows.Forms.Button();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -74,6 +77,9 @@
       // 
       // tabPage2
       // 
+      this.tabPage2.Controls.Add(this.button5);
+      this.tabPage2.Controls.Add(this.button4);
+      this.tabPage2.Controls.Add(this.button3);
       this.tabPage2.Controls.Add(this.button2);
       this.tabPage2.Controls.Add(this.button1);
       this.tabPage2.Controls.Add(this.pictureBox2);
@@ -113,6 +119,40 @@
       this.pictureBox2.Size = new System.Drawing.Size(1140, 622);
       this.pictureBox2.TabIndex = 0;
       this.pictureBox2.TabStop = false;
+      this.pictureBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseDown);
+      this.pictureBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseUp);
+      // 
+      // button3
+      // 
+      this.button3.Font = new System.Drawing.Font("MS UI Gothic", 15F);
+      this.button3.Location = new System.Drawing.Point(850, 150);
+      this.button3.Name = "button3";
+      this.button3.Size = new System.Drawing.Size(40, 40);
+      this.button3.TabIndex = 5;
+      this.button3.Text = "↺";
+      this.button3.UseVisualStyleBackColor = true;
+      this.button3.Click += new System.EventHandler(this.button3_Click);
+      // 
+      // button4
+      // 
+      this.button4.Font = new System.Drawing.Font("MS UI Gothic", 15F);
+      this.button4.Location = new System.Drawing.Point(900, 150);
+      this.button4.Name = "button4";
+      this.button4.Size = new System.Drawing.Size(40, 40);
+      this.button4.TabIndex = 6;
+      this.button4.Text = "↻";
+      this.button4.UseVisualStyleBackColor = true;
+      this.button4.Click += new System.EventHandler(this.button4_Click);
+      // 
+      // button5
+      // 
+      this.button5.Location = new System.Drawing.Point(950, 150);
+      this.button5.Name = "button5";
+      this.button5.Size = new System.Drawing.Size(40, 40);
+      this.button5.TabIndex = 7;
+      this.button5.Text = "反転";
+      this.button5.UseVisualStyleBackColor = true;
+      this.button5.Click += new System.EventHandler(this.button5_Click);
       // 
       // Form1
       // 
@@ -143,6 +183,9 @@
     private System.Windows.Forms.PictureBox pictureBox2;
     private System.Windows.Forms.Button button2;
     private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Button button5;
+    private System.Windows.Forms.Button button4;
+    private System.Windows.Forms.Button button3;
   }
 }
 
