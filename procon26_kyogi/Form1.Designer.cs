@@ -32,12 +32,12 @@
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.tabPage2 = new System.Windows.Forms.TabPage();
+      this.button5 = new System.Windows.Forms.Button();
+      this.button4 = new System.Windows.Forms.Button();
+      this.button3 = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
       this.button1 = new System.Windows.Forms.Button();
       this.pictureBox2 = new System.Windows.Forms.PictureBox();
-      this.button3 = new System.Windows.Forms.Button();
-      this.button4 = new System.Windows.Forms.Button();
-      this.button5 = new System.Windows.Forms.Button();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -92,6 +92,38 @@
       this.tabPage2.UseVisualStyleBackColor = true;
       this.tabPage2.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPage2_Paint);
       // 
+      // button5
+      // 
+      this.button5.Location = new System.Drawing.Point(950, 150);
+      this.button5.Name = "button5";
+      this.button5.Size = new System.Drawing.Size(40, 40);
+      this.button5.TabIndex = 7;
+      this.button5.Text = "反転";
+      this.button5.UseVisualStyleBackColor = true;
+      this.button5.Click += new System.EventHandler(this.button5_Click);
+      // 
+      // button4
+      // 
+      this.button4.Font = new System.Drawing.Font("MS UI Gothic", 15F);
+      this.button4.Location = new System.Drawing.Point(900, 150);
+      this.button4.Name = "button4";
+      this.button4.Size = new System.Drawing.Size(40, 40);
+      this.button4.TabIndex = 6;
+      this.button4.Text = "↻";
+      this.button4.UseVisualStyleBackColor = true;
+      this.button4.Click += new System.EventHandler(this.button4_Click);
+      // 
+      // button3
+      // 
+      this.button3.Font = new System.Drawing.Font("MS UI Gothic", 15F);
+      this.button3.Location = new System.Drawing.Point(850, 150);
+      this.button3.Name = "button3";
+      this.button3.Size = new System.Drawing.Size(40, 40);
+      this.button3.TabIndex = 5;
+      this.button3.Text = "↺";
+      this.button3.UseVisualStyleBackColor = true;
+      this.button3.Click += new System.EventHandler(this.button3_Click);
+      // 
       // button2
       // 
       this.button2.Location = new System.Drawing.Point(618, 562);
@@ -121,38 +153,6 @@
       this.pictureBox2.TabStop = false;
       this.pictureBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseDown);
       this.pictureBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseUp);
-      // 
-      // button3
-      // 
-      this.button3.Font = new System.Drawing.Font("MS UI Gothic", 15F);
-      this.button3.Location = new System.Drawing.Point(850, 150);
-      this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(40, 40);
-      this.button3.TabIndex = 5;
-      this.button3.Text = "↺";
-      this.button3.UseVisualStyleBackColor = true;
-      this.button3.Click += new System.EventHandler(this.button3_Click);
-      // 
-      // button4
-      // 
-      this.button4.Font = new System.Drawing.Font("MS UI Gothic", 15F);
-      this.button4.Location = new System.Drawing.Point(900, 150);
-      this.button4.Name = "button4";
-      this.button4.Size = new System.Drawing.Size(40, 40);
-      this.button4.TabIndex = 6;
-      this.button4.Text = "↻";
-      this.button4.UseVisualStyleBackColor = true;
-      this.button4.Click += new System.EventHandler(this.button4_Click);
-      // 
-      // button5
-      // 
-      this.button5.Location = new System.Drawing.Point(950, 150);
-      this.button5.Name = "button5";
-      this.button5.Size = new System.Drawing.Size(40, 40);
-      this.button5.TabIndex = 7;
-      this.button5.Text = "反転";
-      this.button5.UseVisualStyleBackColor = true;
-      this.button5.Click += new System.EventHandler(this.button5_Click);
       // 
       // Form1
       // 

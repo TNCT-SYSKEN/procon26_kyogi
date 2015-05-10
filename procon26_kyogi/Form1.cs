@@ -17,7 +17,7 @@ namespace procon26_kyogi
       InitializeComponent();
     }
     //定数
-    const int MAP = 32, width = 17, length = 17;
+    const int MAP = 32, width = 17, length = 17, mass_begin = 203, mass_end = 882;
 
     //現在選択中のピース
     int[,] item_test = new int[8,8];
@@ -29,6 +29,12 @@ namespace procon26_kyogi
     //Fontを作成
     Font fnt = new Font("ＭＳ ゴシック", 12);
     int[,] map = new int[32, 32];
+    //現在配置されているピースの総数
+    int sum = 0;
+    //ピースの提出データ
+    /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
+    int[,] data = new int[10, 5];
+    //ピース
     int[, ,] item = new int[10, 8, 8] { { { 0,0,0,0,0,0,0,0},
                                         { 0,1,1,1,1,1,1,0},
                                         { 0,1,0,0,0,0,0,0},
@@ -141,6 +147,9 @@ namespace procon26_kyogi
         for (int j = 0; j < 8; j++)
           item_test[i, j] = item[count, i, j];
 
+      for (int i = 0; i < pieces; i++)
+        data[i, 4] = -1;
+
     }
 
     private void tabPage1_Paint(object sender, PaintEventArgs e)
@@ -175,11 +184,12 @@ namespace procon26_kyogi
 
     private void tabPage2_Paint(object sender, PaintEventArgs e)
     {
-      //*************枠の作成*****************
       //描画先とするImageオブジェクトを作成する
       Bitmap canvas = new Bitmap(pictureBox2.Width, pictureBox2.Height);
       //ImageオブジェクトのGraphicsオブジェクトを作成する
       Graphics g = Graphics.FromImage(canvas);
+
+      //中央のマスを作成
       for (int i = 0; i <= MAP; i++)
       {
         //(x, y)-(x, y)に、幅1の黒い線を引く
@@ -193,6 +203,15 @@ namespace procon26_kyogi
           //黒色の表示
           if(map[i, j] == 1)
             g.FillRectangle(Brushes.Black, (275 + j * width), i * length, width, length);
+          else if (map[i, j] > 1)
+          {
+            if (map[i, j] == map[i, j + 1])
+              g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 17, 16);
+            if(map[i, j] == map[i + 1, j])
+              g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 16, 17);
+            if (map[i, j] != map[i, j + 1] && map[i, j] != map[i + 1, j])
+              g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 16, 16);
+          }
         }
       }
 
@@ -251,13 +270,19 @@ namespace procon26_kyogi
           g.DrawLine(Pens.Black, (15 + i / 5 * 125), i % 5 * 125 + j * 13, (15 + i / 5 * 125 + 8 * 13), i % 5 * 125 + j * 13);
           g.DrawLine(Pens.Black, (15 + i / 5 * 125 + j * 13), i % 5 * 125, (15 + i / 5 * 125 + j * 13), i % 5 * 125 + 8 * 13);
         }
+      int a = 0;
       for (int i = 0; i < 10; i++)
       {
         if ((count - 10 + i >= 0) && (pieces > count + i - 10))
         for (int j = 0; j < 8; j++)
           for (int k = 0; k < 8; k++)
             if (item[count - 10 + i, j, k] == 1)
-              g.FillRectangle(Brushes.Aqua, (15 + i / 5 * 125 +  k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
+              if (data[a, 4] == count - 10 + i)
+                g.FillRectangle(Brushes.PaleGreen, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
+              else
+                g.FillRectangle(Brushes.Aqua, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
+
+        if (data[a, 4] == count - 10 + i) a++;
       }
 
 
@@ -294,26 +319,94 @@ namespace procon26_kyogi
       //画面座標をクライアント座標に変換する
       System.Drawing.Point cp = this.PointToClient(sp);
 
-      //座標を取得する
+      int x;
+      int y = (cp.Y - 60) / length;
+      if (cp.X > (60 + mass_begin + 69))
+        x = (cp.X - (60 + mass_begin + 69)) / width;
+      else
+        x = (cp.X - (60 + mass_begin + 68)) / width - 1;
+      //ブロックを置くことができるか判定
+      int block_check = 0;
+
+      //ブロックの当たり判定
       if (click_down_flag == 1)
       {
-        for (int j = 0; j < 8; j++)
-          for (int k = 0; k < 8; k++)
-            if (item[count, j, k] == 1)
-              g.FillRectangle(Brushes.Aqua, cp.X - 60 + k * 17, cp.Y - 60 + j * 17, 16, 16);
+        data[sum, 0] = y;
+        data[sum, 1] = x;
+        for (int i = 0; i < 8; i++)
+        {
+          for (int j = 0; j < 8; j++)
+          {
+            if (item_test[i, j] == 1)
+            {
+              if (cp.X >= mass_begin && cp.X <= mass_end)
+              {
+                if ((y + i) < 0 || (y + i) >= 32 || (x + j) < 0 || (x + j) >= 32)
+                {
+                  g.FillRectangle(Brushes.Pink, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
+                  block_check++;
+                }
+                else if(map[y + i, x + j] >= 1)
+                {
+                  g.FillRectangle(Brushes.DeepPink, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
+                  block_check++;
+                }
+                else {
+                  g.FillRectangle(Brushes.Aqua, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
+                }
+              }
+              else
+              {
+                g.FillRectangle(Brushes.Aqua, cp.X - 60 + j * 17, cp.Y - 60 + i * 17, 16, 16);
+              }
+            }
+          }
+        }
       }
 
       if (click_up_flag == 1)
       {
-        click_down_flag = 0;
         click_up_flag = 0;
+        if (click_down_flag == 1 && block_check == 0 && mass_begin <= cp.X && mass_end >= cp.X)
+        {
+          for (int i = 0; i < 8; i++)
+          {
+            for (int j = 0; j < 8; j++)
+            {
+              if (item_test[i, j] == 1 && (i + y) >= 0 && (j + x) >= 0 && (i + y) < 32 && (j + x) < 32)
+              {
+                map[i + y, j + x] = count + 2;
+              }
+            }
+          }
+          data[sum, 4] = count;
+          sum++;
+          if (count < pieces)
+          {
+            count++;
+            for (int i = 0; i < 8; i++)
+              for (int j = 0; j < 8; j++)
+                if (count < pieces)
+                  item_test[i, j] = item[count, i, j];
+                else
+                  item_test[i, j] = 0;
+          }
+        }
+        click_down_flag = 0;
       }
+
+      g.DrawString(data[sum, 0].ToString("D"), fnt, Brushes.Blue, 850, 210);
+      g.DrawString(data[sum, 1].ToString("D"), fnt, Brushes.Blue, 870, 210);
+      g.DrawString(data[sum, 3].ToString("D"), fnt, Brushes.Blue, 910, 210);
+      if (data[sum, 2] == 0)
+        g.DrawString("H", fnt, Brushes.Blue, 890, 210);
+      else
+        g.DrawString("T", fnt, Brushes.Blue, 890, 210);
 
       //リソースを解放する
       g.Dispose();
       //PictureBox1に表示する
       pictureBox2.Image = canvas;
-      //**************************************
 
     }
 
@@ -342,22 +435,34 @@ namespace procon26_kyogi
     {
       if (count > 0)
       {
+        for (int i = 0; i < 32; i++)
+          for (int j = 0; j < 32; j++)
+            if (map[i, j] == count + 1)
+              map[i, j] = 0;
         count--;
         for (int i = 0; i < 8; i++)
           for (int j = 0; j < 8; j++)
             item_test[i, j] = item[count, i, j];
+        if (sum > 0 && count == data[sum - 1, 4])
+        {
+          data[sum - 1, 4] = -1;
+          sum--;
+        }
       }
     }
 
     //スキップボタン
     private void button2_Click(object sender, EventArgs e)
     {
-      if (count < (pieces + 10))
+      if (count < pieces)
       {
         count++;
         for (int i = 0; i < 8; i++)
           for (int j = 0; j < 8; j++)
-            item_test[i, j] = item[count, i, j];
+            if (count < pieces)
+              item_test[i, j] = item[count, i, j];
+            else
+              item_test[i, j] = 0;
       }
     }
 
@@ -381,6 +486,9 @@ namespace procon26_kyogi
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
           item_test[7 - j, i] = aaa[i, j];
+
+      data[sum, 3] += 270;
+      data[sum, 3] %= 360;
     }
 
     //時計回り
@@ -403,6 +511,9 @@ namespace procon26_kyogi
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
           item_test[j, 7 - i] = aaa[i, j];
+
+      data[sum, 3] += 90;
+      data[sum, 3] %= 360;
     }
 
     //反転
@@ -419,6 +530,9 @@ namespace procon26_kyogi
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
           item_test[i, 7 - j] = aaa[i, j];
+
+      data[sum, 2]++;
+      data[sum, 2] %= 2;
     }
 
 
