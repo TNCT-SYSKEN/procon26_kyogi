@@ -1,4 +1,3 @@
-#pragma once
 #include<iostream>
 #include<fstream>
 #include<vector>
@@ -9,23 +8,36 @@ using namespace std;
 
 //sum_part, ranking, parts
 
-void run(){
+algorithm::algorithm() {
+	map.reserve(32);
+	for (int i = 0; i < 32; i++)
+		map[i].reserve(32);
+
+	out.reserve(10);
+	for (int i = 0; i < 10; i++)
+		out[i].reserve(4);
+
+	parts.reserve(10);
+	for (int i = 0; i < 8; i++) {
+		parts[i].reserve(8);
+		for (int j = 0; j < 8; j++) {
+			parts[i][j].reserve(8);
+		}
+	}
+	sum_part = 0;
+}
+
+void algorithm::run(){
 	//優先順位を格納
 	vector<int> ranking(sum_part);
 	
 	rank();
 }
 
-void algorithm(){
-	sum_part = 0;
+void algorithm::rank(){
 }
 
-void rank(){
-	
-}
-
-
-void input_file(){
+void algorithm::input_file(){
   //ファイル入力ストリームの初期化
   ifstream ifs("input.txt");
   string line;
@@ -56,7 +68,7 @@ void input_file(){
   }
 }
 
-void output_file(){
+void algorithm::output_file(){
 	ofstream ofs("output.txt");
 	cout << out.size() << endl;
 	for(int i=0;i<(int)out.size();i++){

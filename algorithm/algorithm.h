@@ -6,13 +6,14 @@ private:
 	//石の総数
   int sum_part;
   //マップデータ
-	std::vector<std::vector<int> > map(32, std::vector<int>(32));
+	std::vector<std::vector<int> > map;
   //入力データ
-	std::vector<std::vector<std::vector<int> > > parts(10, std::vector<std::vector<int> >(8, std::vector<int>(8)));
+	std::vector<std::vector<std::vector<int> > > parts;
   //出力データ
-	std::vector<std::vector<int> > out(10, std::vector<int>(4));
+	std::vector<std::vector<int> > out;
 
 public:
+    algorithm();
 	//ファイルの入力
 	void input_file();
 	//ファイルへ出力
