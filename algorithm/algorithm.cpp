@@ -6,24 +6,23 @@
 #include"algorithm.h"
 using namespace std;
 
-//sum_part, ranking, parts
-
 algorithm::algorithm() {
-	map.reserve(32);
+	map.resize(32);
 	for (int i = 0; i < 32; i++)
-		map[i].reserve(32);
+		map[i].resize(32);
 
-	out.reserve(10);
+	out.resize(10);
 	for (int i = 0; i < 10; i++)
-		out[i].reserve(4);
+		out[i].resize(4, 0);
 
-	parts.reserve(10);
+	parts.resize(10);
 	for (int i = 0; i < 8; i++) {
-		parts[i].reserve(8);
+		parts[i].resize(8);
 		for (int j = 0; j < 8; j++) {
-			parts[i][j].reserve(8);
+			parts[i][j].resize(8);
 		}
 	}
+	
 	sum_part = 0;
 }
 
@@ -44,17 +43,27 @@ void algorithm::input_file(){
   int sum=0, t=0;
 	//1ファイルの中身を一行ずつ追加
   while (getline(ifs, line)){
+
 	  if (line.size() == 32){
 			for (int i = 0; i < 32; i++)
 				map[t][i] = (int)line[i] - (int)'0';
 			t++;
 		}
 		else if (line.size() == 8){
-			if ((sum + 1) == (int)parts.size())
-				parts.push_back(vector<vector<int> >(8, vector<int>(8)));
-			for (int i = 0; i < 8; i++)
+			if (sum == (int)parts.size()){
+				cout << parts.size();
+				//parts.push_back(vector<vector<int> >(8, vector<int>(8)));
+				cout << parts.size();
+				out.push_back(vector<int>(4));
+			}
+			for (int i = 0; i < 8; i++){
+				//parts[sum][t][i] = (int)(line[i] - '0');
+				cout << line[i] << " ";
+			}
+			cout << endl;
 			if (t == 7){
 				sum++;
+				cout <<  endl;
 			}
 			t++;
 		}
@@ -71,12 +80,15 @@ void algorithm::input_file(){
 void algorithm::output_file(){
 	ofstream ofs("output.txt");
 	cout << out.size() << endl;
+	cout << parts.size() << endl;
+	
+
 	for(int i=0;i<(int)out.size();i++){
 		if(i!=0)	ofs << endl;
 		
-		if(out[i][3] == 0)//表
-			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][4];
-		else if(out[i][3] == 1)//裏
-			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][4];
+		if(out[i][2] == 0)//表
+			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][3];
+		else if(out[i][2] == 1)//裏
+			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][3];
 	}
 }
