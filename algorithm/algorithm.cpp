@@ -11,19 +11,7 @@ algorithm::algorithm() {
 	for (int i = 0; i < 32; i++)
 		map[i].resize(32);
 
-	out.resize(10);
-	for (int i = 0; i < 10; i++)
-		out[i].resize(4, 0);
-
-	parts.resize(10);
-	for (int i = 0; i < 8; i++) {
-		parts[i].resize(8);
-		for (int j = 0; j < 8; j++) {
-			parts[i][j].resize(8);
-		}
-	}
-	
-	sum_part = 0;
+		sum_part = 0;
 }
 
 void algorithm::run(){
@@ -50,12 +38,6 @@ void algorithm::input_file(){
 			t++;
 		}
 		else if (line.size() == 8){
-			if (sum == (int)parts.size()){
-				cout << parts.size();
-				//parts.push_back(vector<vector<int> >(8, vector<int>(8)));
-				cout << parts.size();
-				out.push_back(vector<int>(4));
-			}
 			for (int i = 0; i < 8; i++){
 				//parts[sum][t][i] = (int)(line[i] - '0');
 				cout << line[i] << " ";
@@ -71,6 +53,17 @@ void algorithm::input_file(){
 			for (int i = 0; i < (int)line.size(); i++){
 				sum_part += (int)pow(10, i) * ((int)line[line.size() - i - 1] - (int)'0');
 			}
+			//Î‚Æo—Í—p‚Ì—v‘f‚ð‚Æ‚é
+			parts.resize(sum_part);
+			for (int i = 0; i < 8; i++) {
+				parts[i].resize(8);
+				for (int j = 0; j < 8; j++) {
+					parts[i][j].resize(8);
+				}
+			}
+			out.resize(sum_part);
+			for (int i = 0; i < 10; i++)
+				out[i].resize(4, 0);
 		}
 		else
 			t = 0;
