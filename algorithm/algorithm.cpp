@@ -3,6 +3,7 @@
 #include<vector>
 #include<string>
 #include<math.h>
+#include <cstdlib>
 #include"algorithm.h"
 using namespace std;
 
@@ -50,9 +51,7 @@ void algorithm::input_file(){
 			t++;
 		}
 		else if (line.size() != 0){
-			for (int i = 0; i < (int)line.size(); i++){
-				sum_part += (int)pow(10, i) * ((int)line[line.size() - i - 1] - (int)'0');
-			}
+			sum_part += atoi(line.c_str());
 			//Î‚Æo—Í—p‚Ì—v‘f‚ð‚Æ‚é
 			parts.resize(sum_part);
 			for (int i = 0; i < sum_part; i++) {
