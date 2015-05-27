@@ -11,7 +11,7 @@ algorithm::algorithm() {
 	for (int i = 0; i < 32; i++)
 		map[i].resize(32);
 
-		sum_part = 0;
+	sum_part = 0;
 }
 
 void algorithm::run(){
@@ -26,13 +26,13 @@ void algorithm::rank(){
 
 void algorithm::input_file(){
   //ファイル入力ストリームの初期化
-  ifstream ifs("input.txt");
-  string line;
-  int sum=0, t=0;
+	ifstream ifs("input.txt");
+	string line;
+	int sum=0, t=0;
 	//1ファイルの中身を一行ずつ追加
-  while (getline(ifs, line)){
+	while (getline(ifs, line)){
 
-	  if (line.size() == 32){
+		if (line.size() == 32){
 			for (int i = 0; i < 32; i++)
 				map[t][i] = (int)line[i] - (int)'0';
 			t++;
@@ -67,7 +67,7 @@ void algorithm::input_file(){
 		}
 		else
 			t = 0;
-  }
+	}
 }
 
 void algorithm::output_file(){
