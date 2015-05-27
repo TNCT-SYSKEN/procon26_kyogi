@@ -55,14 +55,14 @@ void algorithm::input_file(){
 			}
 			//Î‚Æo—Í—p‚Ì—v‘f‚ğ‚Æ‚é
 			parts.resize(sum_part);
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < sum_part; i++) {
 				parts[i].resize(8);
 				for (int j = 0; j < 8; j++) {
 					parts[i][j].resize(8);
 				}
 			}
 			out.resize(sum_part);
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < sum_part; i++)
 				out[i].resize(4, 0);
 		}
 		else
