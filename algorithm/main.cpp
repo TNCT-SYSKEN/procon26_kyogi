@@ -10,6 +10,8 @@ int main(){
 	algorithm p;
 
   p.input_file();
+
+	p.run();
 	
 	p.output_file();
 

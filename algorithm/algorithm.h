@@ -4,10 +4,10 @@
 class algorithm{
 private:
 	//石の総数
-  int sum_part;
+  int sum;
   //マップデータ
 	std::vector<std::vector<int> > map;
-  //入力データ
+  //石データ
 	std::vector<std::vector<std::vector<int> > > parts;
   //出力データ
 	std::vector<std::vector<int> > out;
