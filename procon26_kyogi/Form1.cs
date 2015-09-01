@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace procon26_kyogi
 {
@@ -26,6 +27,14 @@ namespace procon26_kyogi
     //ピースの総数
     int pieces = 10;
     int count = 0;
+
+    int[,] mapp = new int[32,32];
+    int[, ,] stn = new int[256, 8, 8];
+    int mapx = 0, mapy = 0; //マップのx,y座標
+    int stnnum = 0, stnx = 0, stny = 0; //石の番号,x,y座標
+    int nextflag = 0; //stnnumを次の数値に移行させるための変数
+    int stns = 0; //石の総数
+    
     //Fontを作成
     Font fnt = new Font("ＭＳ ゴシック", 12);
     int[,] map = new int[32, 32];
@@ -33,9 +42,9 @@ namespace procon26_kyogi
     int sum = 0;
     //ピースの提出データ
     /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
-    int[,] data = new int[10, 5];
+    int[,] data = new int[11, 5];
     //ピース
-    int[, ,] item = new int[10, 8, 8] { { { 0,0,0,0,0,0,0,0},
+    int[, ,] item = new int[11, 8, 8] { { { 0,0,0,0,0,0,0,0},
                                         { 0,1,1,1,1,1,1,0},
                                         { 0,1,0,0,0,0,0,0},
                                         { 0,1,0,0,0,0,0,0}, 
@@ -123,7 +132,16 @@ namespace procon26_kyogi
                                         { 0,0,0,0,0,0,0,0},
                                         { 0,0,0,0,0,0,0,0}, 
                                         { 0,0,1,1,1,1,0,0}, 
-                                        { 0,0,1,1,1,1,1,0} },};
+                                        { 0,0,1,1,1,1,1,0} },
+
+                                        { { 0,0,0,0,0,0,0,0},
+                                        { 0,0,0,0,0,0,0,0},
+                                        { 0,0,0,0,0,0,0,0},
+                                        { 0,0,0,0,0,0,1,0}, 
+                                        { 0,0,0,0,0,0,0,0},
+                                        { 0,0,0,0,0,0,0,0}, 
+                                        { 0,0,0,0,0,0,0,0}, 
+                                        { 0,0,0,0,0,0,0,0} },};
 
 
     //初期化やファイル読み込み
@@ -534,9 +552,189 @@ namespace procon26_kyogi
       data[sum, 2]++;
       data[sum, 2] %= 2;
     }
+    
+      
+    //*************************************
+    //入力ファイルを開く
+    //
+    //入力ファイル選択Buttonでファイル選択
+    private void button11_Click(object sender, EventArgs e)
+    {
+      DialogResult dr = openFileDialog1.ShowDialog();
+      if (dr == System.Windows.Forms.DialogResult.OK)
+      {
+        //ファイル名をtextBox1に出力
+        textBox1.Text = openFileDialog1.FileName;
+      }
+
+      //テキスト内容をtextBox3に出力
+      FileStream fs = new FileStream(openFileDialog1.FileName, FileMode.Open);
+      StreamReader sr = new StreamReader(fs);
+
+      string text = sr.ReadToEnd();
+      System.Text.Encoding.GetEncoding("us-ascii");
+      textBox3.Text = text;
+      
+      //TextBox3に入力されている文字列から一行ずつ読み込む
+      //文字列(TextBox3に入力された文字列)からStringReaderインスタンスを作成
+      System.IO.StringReader rs = new System.IO.StringReader(textBox3.Text);
+
+      //読み込みできる文字がなくなるまで繰り返す
+      while (rs.Peek() > -1)
+      {
+        Console.WriteLine(rs.ReadLine());
+        if (rs.Peek() == 32)     //マップ情報の読み取り
+        {
+          for (mapx = 0; mapx < 32; mapx++)
+          {
+              mapp[mapx, mapy] = int.Parse(text.Substring(mapx, 1));
+          }
+          mapy++;
+        }
+        else if (rs.Peek() == 8)  //石の読み取り
+        {
+          for (stnx = 0; stnx < 8; stnx++)
+          {
+              stn[stnnum, stnx, stny] = int.Parse(text.Substring(stnx, 1));
+          }
+          nextflag++;
+          if (nextflag == 7)
+          {
+            stnnum++;           //次の石の読み取りに移る
+            nextflag = 0;
+          }
+        }
+        else if (3 >= rs.Peek() && rs.Peek() >= 1)  //石の総数の読み取り
+        {
+          stns = int.Parse(text.Substring(1, rs.Peek()));
+        }
+        //else if (iLength != 0)    //読み取り可能な文字がなくなったら
+        //{
+        //stns = stnnum;
+        //}
+        //
+        //string text = sr.ReadLine();
+        //一文字分の整数を取る
+        //int a = int.Parse(text.Substring(10, 1));
+        sr.Close();
+        fs.Close();
+
+      } 
+      rs.Close();
+    }
+    
+    //Drag&Dropでファイル選択
+    private void textBox1_DragDrop(object sender, DragEventArgs e)
+    {
+        //ドロップされたファイルの一覧を取得
+        string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+        if (fileName.Length <= 0)
+        {
+            return;
+        }
+
+        //ドロップ先がTextBoxであるかチェック
+        TextBox txtTarget = sender as TextBox;
+        if (txtTarget == null)
+        {
+            return;
+        }
+
+        //TextBoxの内容をファイル名に変更
+        txtTarget.Text = fileName[0];
+    }
+
+    private void textBox1_DragEnter(object sender, DragEventArgs e)
+    {
+        //ファイルがドラッグされている場合、カーソルを変更する
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+    }
 
 
+    //*************************************
+
+    //*************************************
+    //計算結果を出力したファイルを生成する
+    //
+    //Buttonでファイル書き込み
+    private void button10_Click(object sender, EventArgs e)
+    {
+        if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {
+            FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.WriteLine(textBox4.Text);
+            sw.Close();
+            fs.Close();
+        }
+
+
+    }
+
+    //*************************************
     
-    
+
+    //パターン1~4のボタン
+    private void button9_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void button8_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void button7_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void button6_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+    {
+
+    }
+
+    /*
+     int mapx=0,mapy=0,stnx=0,stny=0,s=0,num=0,pieces=0;    //pieces:石の数を記憶,num:各石に番号をふる
+     
+     while(一行とる){
+        if(32){                                             //マップ情報の読み取り
+          for(32回繰り返す){
+            map[mapx][mapy]=一文字分のデータ
+          }
+          mapx++;                                           //次の行の読み取りに移る
+          mapy=0;
+        }else if(8){                                        //石の読み取り
+          for(8回繰り返す){
+            map[num][stnx][stny]=一文字分のデータ
+          }
+          s++;
+          if(s==7){
+            num++;                                          //次の石の読み取りに移る
+            s=0;
+          }
+        }else if(!0){
+          pieces=石の総数
+        }
+     }
+     */
+
+    /*
+       1.三種類の入力パターン(マス、ピース、ピースの数)
+       2.一列のサイズを把握(32,8,1~3)
+       3.while文で繰り返す(配列)
+       4.一つずつのデータをint型に変換して配列に代入
+    */
+
+    //文字コードはASCIIコード、改行コードはCR+LF
   }
 }
