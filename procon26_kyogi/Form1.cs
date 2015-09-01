@@ -21,20 +21,14 @@ namespace procon26_kyogi
     const int MAP = 32, width = 17, length = 17, mass_begin = 203, mass_end = 882;
 
     //現在選択中のピース
-    int[,] item_test = new int[8,8];
+    int[,] item_test = new int[8, 8];
     //クリックフラグ
-    int click_down_flag = 0, click_up_flag=0;
+    int click_down_flag = 0, click_up_flag = 0;
     //ピースの総数
-    int pieces = 10;
+    int pieces;
     int count = 0;
 
-    int[,] mapp = new int[32,32];
-    int[, ,] stn = new int[256, 8, 8];
-    int mapx = 0, mapy = 0; //マップのx,y座標
-    int stnnum = 0, stnx = 0, stny = 0; //石の番号,x,y座標
-    int nextflag = 0; //stnnumを次の数値に移行させるための変数
-    int stns = 0; //石の総数
-    
+
     //Fontを作成
     Font fnt = new Font("ＭＳ ゴシック", 12);
     int[,] map = new int[32, 32];
@@ -42,130 +36,18 @@ namespace procon26_kyogi
     int sum = 0;
     //ピースの提出データ
     /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
-    int[,] data = new int[11, 5];
+    int[,] data = new int[256, 5];
     //ピース
-    int[, ,] item = new int[11, 8, 8] { { { 0,0,0,0,0,0,0,0},
-                                        { 0,1,1,1,1,1,1,0},
-                                        { 0,1,0,0,0,0,0,0},
-                                        { 0,1,0,0,0,0,0,0}, 
-                                        { 0,1,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-    
-                                        { { 0,1,0,0,0,0,0,0},
-                                        { 0,1,0,0,0,0,0,0},
-                                        { 0,1,0,0,0,0,0,0},
-                                        { 0,1,0,0,0,0,0,0}, 
-                                        { 0,1,0,0,0,0,0,0},
-                                        { 0,1,0,0,0,0,0,0}, 
-                                        { 0,1,0,0,0,0,0,0}, 
-                                        { 0,1,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,1,0,0,0},
-                                        { 0,0,0,0,1,0,0,0}, 
-                                        { 0,0,0,0,1,1,1,0},
-                                        { 0,0,0,0,0,0,1,0}, 
-                                        { 0,0,0,0,0,0,1,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,1,1,1,1,0},
-                                        { 0,0,0,1,1,1,1,0}, 
-                                        { 0,0,0,1,1,1,1,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-
-                                        { { 0,0,0,0,0,0,0,1},
-                                        { 0,0,0,0,0,0,1,1},
-                                        { 0,0,0,0,0,1,1,0},
-                                        { 0,0,0,0,1,1,0,0}, 
-                                        { 0,0,0,1,1,0,0,0},
-                                        { 0,0,1,1,0,0,0,0}, 
-                                        { 0,1,1,0,0,0,0,0}, 
-                                        { 1,1,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 1,1,0,0,0,0,0,0},
-                                        { 1,0,0,0,0,0,0,0},
-                                        { 1,0,0,0,0,0,0,0}, 
-                                        { 1,1,1,1,1,1,1,1},
-                                        { 0,0,0,0,0,0,0,1}, 
-                                        { 0,0,0,0,0,0,0,1}, 
-                                        { 0,0,0,0,0,0,0,1} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,1,0,1,0,0},
-                                        { 0,0,1,1,1,1,1,0}, 
-                                        { 0,0,1,0,0,0,0,0},
-                                        { 0,0,1,1,1,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,1,0,0,0,0,0},
-                                        { 0,0,1,0,0,0,0,0},
-                                        { 0,0,1,0,0,0,0,0}, 
-                                        { 0,0,1,1,1,1,0,0},
-                                        { 0,0,1,0,0,0,0,0}, 
-                                        { 0,0,1,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,1,0,0,0},
-                                        { 0,1,1,1,1,1,0,0},
-                                        { 0,0,0,0,0,1,0,0},
-                                        { 0,0,1,0,0,1,0,0}, 
-                                        { 0,0,1,0,0,1,0,0},
-                                        { 0,0,1,1,1,1,0,0}, 
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0} },
-    
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,1,1,1,1,0,0}, 
-                                        { 0,0,1,1,1,1,1,0} },
-
-                                        { { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,1,0}, 
-                                        { 0,0,0,0,0,0,0,0},
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0}, 
-                                        { 0,0,0,0,0,0,0,0} },};
+    int[, ,] item = new int[256, 8, 8];
 
 
     //初期化やファイル読み込み
     private void Form1_Load(object sender, EventArgs e)
     {
-      //テスト用のフィールド
-      for (int i = 0; i < MAP; i++)
-        for (int j = 0; j < MAP; j++)
-          map[i, j] = 0;
-      for (int i = 1; i < 6; i++)
-      for (int j = 0; j < MAP; j++)
-      {
-        map[MAP - i, j] = 1;
-        map[j, MAP - i] = 1;
-      }
-      map[10, 10] = 1;
 
       //テスト用にパーツの作成
 
-      for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-          item_test[i, j] = item[count, i, j];
-
-      for (int i = 0; i < pieces; i++)
+      for (int i = 0; i < 256; i++)
         data[i, 4] = -1;
 
     }
@@ -190,6 +72,8 @@ namespace procon26_kyogi
           //黒色の表示
           if (map[i, j] == 1)
             g.FillRectangle(Brushes.Black, (800 + j * width / 2), 250 + i * length / 2, 1 + width / 2, 1 + length / 2);
+          else if(map[i, j] >= 2)
+            g.FillRectangle(Brushes.Aqua, (800 + j * width / 2) + 1, 250 + i * length / 2 + 1,  width / 2, length / 2);
         }
       }
       //リソースを解放する
@@ -197,11 +81,15 @@ namespace procon26_kyogi
       //PictureBox1に表示する
       pictureBox1.Image = canvas;
       //**************************************
-    
+
     }
 
     private void tabPage2_Paint(object sender, PaintEventArgs e)
     {
+
+      for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+          item_test[i, j] = item[count, i, j];
       //描画先とするImageオブジェクトを作成する
       Bitmap canvas = new Bitmap(pictureBox2.Width, pictureBox2.Height);
       //ImageオブジェクトのGraphicsオブジェクトを作成する
@@ -219,13 +107,13 @@ namespace procon26_kyogi
         for (int j = 0; j < MAP; j++)
         {
           //黒色の表示
-          if(map[i, j] == 1)
+          if (map[i, j] == 1)
             g.FillRectangle(Brushes.Black, (275 + j * width), i * length, width, length);
           else if (map[i, j] > 1)
           {
             if (map[i, j] == map[i, j + 1])
               g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 17, 16);
-            if(map[i, j] == map[i + 1, j])
+            if (map[i, j] == map[i + 1, j])
               g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 16, 17);
             if (map[i, j] != map[i, j + 1] && map[i, j] != map[i + 1, j])
               g.FillRectangle(Brushes.Aqua, (275 + j * width + 1), i * length + 1, 16, 16);
@@ -235,20 +123,20 @@ namespace procon26_kyogi
 
       //右ブロックの表示
       for (int i = 0; i < 4; i++)
-      for (int j = 0; j <= 8; j++)
-      {
-        //(x, y)-(x, y)に、幅1の黒い線を引く
-        if (i == 0)
+        for (int j = 0; j <= 8; j++)
         {
-          g.DrawLine(Pens.Black, (850), i * 160 + j * length, (850 + 8 * width), i * 160 + j * length);
-          g.DrawLine(Pens.Black, (850 + j * width), i * 160, (850 + j * width), i * 160 + 8 * length);
+          //(x, y)-(x, y)に、幅1の黒い線を引く
+          if (i == 0)
+          {
+            g.DrawLine(Pens.Black, (850), i * 160 + j * length, (850 + 8 * width), i * 160 + j * length);
+            g.DrawLine(Pens.Black, (850 + j * width), i * 160, (850 + j * width), i * 160 + 8 * length);
+          }
+          else
+          {
+            g.DrawLine(Pens.Black, (850), 125 + i * 125 + j * 13, (850 + 8 * 13), 125 + i * 125 + j * 13);
+            g.DrawLine(Pens.Black, (850 + j * 13), 125 + i * 125, (850 + j * 13), 125 + i * 125 + 8 * 13);
+          }
         }
-        else
-        {
-          g.DrawLine(Pens.Black, (850),125 + i * 125 + j * 13, (850 + 8 * 13),125 + i * 125 + j * 13);
-          g.DrawLine(Pens.Black, (850 + j * 13),125 + i * 125, (850 + j * 13),125 +  i * 125 + 8 * 13);
-        }
-      }
       for (int i = 0; i < 6; i++)
         for (int j = 0; j <= 8; j++)
         {
@@ -259,25 +147,25 @@ namespace procon26_kyogi
       for (int i = 0; i < 4; i++)
       {
         if (pieces > count + i)
-        for (int j = 0; j < 8; j++)
-          for (int k = 0; k < 8; k++)
-            if (i == 0)
-            {
-              if(item_test[j, k] == 1)
-              g.FillRectangle(Brushes.Aqua, (850 + k * width + 1), i * 160 + j * length + 1, width - 1, length - 1);
-            }
-            else if (item[count + i, j, k] == 1)
-            {
-              g.FillRectangle(Brushes.Aqua, (850 + k * 13 + 1), 125 + i * 125 + j * 13 + 1, 12, 12);
-            }
+          for (int j = 0; j < 8; j++)
+            for (int k = 0; k < 8; k++)
+              if (i == 0)
+              {
+                if (item_test[j, k] == 1)
+                  g.FillRectangle(Brushes.Aqua, (850 + k * width + 1), i * 160 + j * length + 1, width - 1, length - 1);
+              }
+              else if (item[count + i, j, k] == 1)
+              {
+                g.FillRectangle(Brushes.Aqua, (850 + k * 13 + 1), 125 + i * 125 + j * 13 + 1, 12, 12);
+              }
       }
       for (int i = 0; i < 6; i++)
       {
-        if(pieces > count + 4 + i)
-        for (int j = 0; j < 8; j++)
-          for (int k = 0; k < 8; k++)
-            if (item[count + 4 + i, j, k] == 1)
-              g.FillRectangle(Brushes.Aqua, (1025 + k * 10 + 1), i * 100 + j * 10 + 1, 9, 9);
+        if (pieces > count + 4 + i)
+          for (int j = 0; j < 8; j++)
+            for (int k = 0; k < 8; k++)
+              if (item[count + 4 + i, j, k] == 1)
+                g.FillRectangle(Brushes.Aqua, (1025 + k * 10 + 1), i * 100 + j * 10 + 1, 9, 9);
       }
 
       //左ブロックの表示
@@ -292,44 +180,16 @@ namespace procon26_kyogi
       for (int i = 0; i < 10; i++)
       {
         if ((count - 10 + i >= 0) && (pieces > count + i - 10))
-        for (int j = 0; j < 8; j++)
-          for (int k = 0; k < 8; k++)
-            if (item[count - 10 + i, j, k] == 1)
-              if (data[a, 4] == count - 10 + i)
-                g.FillRectangle(Brushes.PaleGreen, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
-              else
-                g.FillRectangle(Brushes.Aqua, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
+          for (int j = 0; j < 8; j++)
+            for (int k = 0; k < 8; k++)
+              if (item[count - 10 + i, j, k] == 1)
+                if (data[a, 4] == count - 10 + i)
+                  g.FillRectangle(Brushes.PaleGreen, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
+                else
+                  g.FillRectangle(Brushes.Aqua, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
 
         if (data[a, 4] == count - 10 + i) a++;
       }
-
-
-
-      /*ネタ*/
-      /*
-      t++;
-      t %= 1000;
-      if(t < 500){
-      //フォーム上の座標でマウスポインタの位置を取得する
-      //画面座標でマウスポインタの位置を取得する
-      System.Drawing.Point sp = System.Windows.Forms.Cursor.Position;
-      //画面座標をクライアント座標に変換する
-
-      System.Drawing.Point cp = this.PointToClient(sp);
-      //X座標を取得する
-      int x = cp.X;
-      //Y座標を取得する
-      int y = cp.Y;
-      float angle = (float)(0.02 * Math.PI * (t % 1000));
-      int a = (int)(250 + 200 * Math.Sin(angle));
-
-      //フォーム上の座標 (10, 20) にマウスポインタを移動する
-      //クライアント座標を画面座標に変換する
-      System.Drawing.Point mp = this.PointToScreen(
-          new System.Drawing.Point((t % 200) * 5, a));
-      //マウスポインタの位置を設定する
-      System.Windows.Forms.Cursor.Position = mp;
-      }*/
 
       //フォーム上の座標でマウスポインタの位置を取得する
       //画面座標でマウスポインタの位置を取得する
@@ -364,12 +224,13 @@ namespace procon26_kyogi
                   g.FillRectangle(Brushes.Pink, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
                   block_check++;
                 }
-                else if(map[y + i, x + j] >= 1)
+                else if (map[y + i, x + j] >= 1)
                 {
                   g.FillRectangle(Brushes.DeepPink, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
                   block_check++;
                 }
-                else {
+                else
+                {
                   g.FillRectangle(Brushes.Aqua, (cp.X - 60) / width * width + j * 17 + 4, y * length + i * 17 + 1, 16, 16);
                 }
               }
@@ -552,8 +413,8 @@ namespace procon26_kyogi
       data[sum, 2]++;
       data[sum, 2] %= 2;
     }
-    
-      
+
+
     //*************************************
     //入力ファイルを開く
     //
@@ -574,11 +435,14 @@ namespace procon26_kyogi
       string text = sr.ReadToEnd();
       System.Text.Encoding.GetEncoding("us-ascii");
       textBox3.Text = text;
-      
+
       //TextBox3に入力されている文字列から一行ずつ読み込む
       //文字列(TextBox3に入力された文字列)からStringReaderインスタンスを作成
       System.IO.StringReader rs = new System.IO.StringReader(textBox3.Text);
 
+      int mapx = 0, mapy = 0; //マップのx,y座標
+      int num = 0, stnx = 0, stny = 0; //石の番号,x,y座標
+      int next = 0; //stnnumを次の数値に移行させるための変数
       //読み込みできる文字がなくなるまで繰り返す
       while (rs.Peek() > -1)
       {
@@ -587,7 +451,7 @@ namespace procon26_kyogi
         {
           for (mapx = 0; mapx < 32; mapx++)
           {
-              mapp[mapx, mapy] = int.Parse(text.Substring(mapx, 1));
+            map[mapx, mapy] = int.Parse(text.Substring(mapx, 1));
           }
           mapy++;
         }
@@ -595,18 +459,18 @@ namespace procon26_kyogi
         {
           for (stnx = 0; stnx < 8; stnx++)
           {
-              stn[stnnum, stnx, stny] = int.Parse(text.Substring(stnx, 1));
+            item[num, stnx, stny] = int.Parse(text.Substring(stnx, 1));
           }
-          nextflag++;
-          if (nextflag == 7)
+          next++;
+          if (next == 7)
           {
-            stnnum++;           //次の石の読み取りに移る
-            nextflag = 0;
+            num++;           //次の石の読み取りに移る
+            next = 0;
           }
         }
         else if (3 >= rs.Peek() && rs.Peek() >= 1)  //石の総数の読み取り
         {
-          stns = int.Parse(text.Substring(1, rs.Peek()));
+          pieces = int.Parse(text.Substring(1, rs.Peek()));
         }
         //else if (iLength != 0)    //読み取り可能な文字がなくなったら
         //{
@@ -619,38 +483,78 @@ namespace procon26_kyogi
         sr.Close();
         fs.Close();
 
-      } 
+      }
       rs.Close();
     }
-    
-    //Drag&Dropでファイル選択
+
+    //---------------------------Drag&Dropでファイル選択--------------------------
     private void textBox1_DragDrop(object sender, DragEventArgs e)
     {
-        //ドロップされたファイルの一覧を取得
-        string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-        if (fileName.Length <= 0)
-        {
-            return;
-        }
+      //ドロップされたファイルの一覧を取得
+      string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
 
-        //ドロップ先がTextBoxであるかチェック
-        TextBox txtTarget = sender as TextBox;
-        if (txtTarget == null)
-        {
-            return;
-        }
+      if (fileName.Length <= 0)
+      {
+        return;
+      }
 
-        //TextBoxの内容をファイル名に変更
-        txtTarget.Text = fileName[0];
+      //ドロップ先がTextBoxであるかチェック
+      TextBox txtTarget = sender as TextBox;
+      if (txtTarget == null)
+      {
+        return;
+      }
+      //テキスト内容をtextBox3に出力
+      FileStream fs = new FileStream(fileName[0], FileMode.Open);
+      StreamReader sr = new StreamReader(fs);
+
+      string text = sr.ReadToEnd();
+      textBox3.Text = text;
+      System.Text.Encoding.GetEncoding("us-ascii");
+      System.IO.StringReader rs = new System.IO.StringReader(text);
+
+      int mapx = 0, mapy = 0; //マップのx,y座標
+      int num = 0, stnx = 0, stny = 0; //石の番号,x,y座標
+      //読み込みできる文字がなくなるまで繰り返す
+      while (rs.Peek() > -1)
+      {
+        string t = rs.ReadLine();
+        if (t.Length == 32)     //マップ情報の読み取り
+        {
+          for (mapx = 0; mapx < 32; mapx++)
+            map[mapy, mapx] = int.Parse(t.Substring(mapx, 1));
+          mapy++;
+        }
+        else if (t.Length == 8)  //石の読み取り
+        {
+          for (stnx = 0; stnx < 8; stnx++)
+            item[num, stny, stnx] = int.Parse(t.Substring(stnx, 1));
+          stny++;
+          if (stny == 8)
+          {
+            num++;           //次の石の読み取りに移る
+            stny = 0;
+          }
+        }
+        else if (3 >= t.Length && t.Length >= 1)  //石の総数の読み取り
+        {
+          pieces = int.Parse(t.Substring(0, t.Length));
+        }
+      }
+      sr.Close();
+      fs.Close();
+      rs.Close();
+      //TextBoxの内容をファイル名に変更
+      txtTarget.Text = fileName[0];
     }
 
     private void textBox1_DragEnter(object sender, DragEventArgs e)
     {
-        //ファイルがドラッグされている場合、カーソルを変更する
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
+      //ファイルがドラッグされている場合、カーソルを変更する
+      if (e.Data.GetDataPresent(DataFormats.FileDrop))
+      {
+        e.Effect = DragDropEffects.Copy;
+      }
     }
 
 
@@ -662,20 +566,20 @@ namespace procon26_kyogi
     //Buttonでファイル書き込み
     private void button10_Click(object sender, EventArgs e)
     {
-        if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
-            FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(textBox4.Text);
-            sw.Close();
-            fs.Close();
-        }
+      if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+      {
+        FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+        StreamWriter sw = new StreamWriter(fs);
+        sw.WriteLine(textBox4.Text);
+        sw.Close();
+        fs.Close();
+      }
 
 
     }
 
     //*************************************
-    
+
 
     //パターン1~4のボタン
     private void button9_Click(object sender, EventArgs e)
@@ -694,11 +598,6 @@ namespace procon26_kyogi
     }
 
     private void button6_Click(object sender, EventArgs e)
-    {
-
-    }
-
-    private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
     {
 
     }
