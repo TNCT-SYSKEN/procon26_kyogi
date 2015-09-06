@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -40,6 +41,9 @@ namespace procon26_kyogi
     //ピース
     int[, ,] item = new int[256, 8, 8];
 
+    //条件付きのリスト
+    ArrayList v = new ArrayList();
+
 
     //初期化やファイル読み込み
     private void Form1_Load(object sender, EventArgs e)
@@ -59,22 +63,22 @@ namespace procon26_kyogi
       Bitmap canvas = new Bitmap(pictureBox2.Width, pictureBox1.Height);
       //ImageオブジェクトのGraphicsオブジェクトを作成する
       Graphics g = Graphics.FromImage(canvas);
-      for (int i = 0; i <= MAP; i++)
-      {
-        //(x, y)-(x, y)に、幅1の黒い線を引く
-        g.DrawLine(Pens.Black, (800), 250 + i * length / 2, (800 + 32 * width / 2), 250 + i * length / 2);
-        g.DrawLine(Pens.Black, (800 + i * width / 2), 250, (800 + i * width / 2), 250 + 32 * length / 2);
-      }
       for (int i = 0; i < MAP; i++)
       {
         for (int j = 0; j < MAP; j++)
         {
-          //黒色の表示
+          //block
           if (map[i, j] == 1)
-            g.FillRectangle(Brushes.Black, (800 + j * width / 2), 250 + i * length / 2, 1 + width / 2, 1 + length / 2);
+            g.FillRectangle(Brushes.Black, (400 + j * width), 0 + i * length, 1 + width, 1 + length);
           else if(map[i, j] >= 2)
-            g.FillRectangle(Brushes.Aqua, (800 + j * width / 2) + 1, 250 + i * length / 2 + 1,  width / 2, length / 2);
+            g.FillRectangle(Brushes.Aqua, (400 + j * width) + 1, 0 + i * length + 1,  width, length);
         }
+      }
+      for (int i = 0; i <= MAP; i++)
+      {
+        //(x, y)-(x, y)に、幅1の黒い線を引く
+        g.DrawLine(Pens.Black, (400), 0 + i * length , (400 + 32 * width ), 0 + i * length );
+        g.DrawLine(Pens.Black, (400 + i * width ), 0, (400 + i * width ), 0 + 32 * length );
       }
       //リソースを解放する
       g.Dispose();
@@ -87,9 +91,6 @@ namespace procon26_kyogi
     private void tabPage2_Paint(object sender, PaintEventArgs e)
     {
 
-      for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-          item_test[i, j] = item[count, i, j];
       //描画先とするImageオブジェクトを作成する
       Bitmap canvas = new Bitmap(pictureBox2.Width, pictureBox2.Height);
       //ImageオブジェクトのGraphicsオブジェクトを作成する
@@ -286,6 +287,11 @@ namespace procon26_kyogi
       g.Dispose();
       //PictureBox1に表示する
       pictureBox2.Image = canvas;
+
+    }
+
+    private void tabPage3_Paint(object sender, PaintEventArgs e)
+    {
 
     }
 
@@ -546,6 +552,12 @@ namespace procon26_kyogi
       rs.Close();
       //TextBoxの内容をファイル名に変更
       txtTarget.Text = fileName[0];
+
+      count = 0;
+      for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+          item_test[i, j] = item[count, i, j];
+
     }
 
     private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -601,6 +613,21 @@ namespace procon26_kyogi
     {
 
     }
+
+    private void tabPage3_Click(object sender, EventArgs e)
+    {
+      //条件で選別
+      /*for (int k = 0; k < pieces; k++)
+      {
+        int sum = 0;
+        for (int i = 0; i < 8; i++)
+          for (int j = 0; j < 8; j++)
+            if (item[k, i, j] == 1)
+              sum++;
+        if(sum  >= 5)
+      }*/
+    }
+
 
     /*
      int mapx=0,mapy=0,stnx=0,stny=0,s=0,num=0,pieces=0;    //pieces:石の数を記憶,num:各石に番号をふる

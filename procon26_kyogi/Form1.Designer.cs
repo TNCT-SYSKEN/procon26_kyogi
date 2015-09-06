@@ -48,6 +48,7 @@
       this.button2 = new System.Windows.Forms.Button();
       this.button1 = new System.Windows.Forms.Button();
       this.pictureBox2 = new System.Windows.Forms.PictureBox();
+      this.tabPage3 = new System.Windows.Forms.TabPage();
       this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
       this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
       this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
@@ -62,6 +63,7 @@
       // 
       this.tabControl1.Controls.Add(this.tabPage1);
       this.tabControl1.Controls.Add(this.tabPage2);
+      this.tabControl1.Controls.Add(this.tabPage3);
       this.tabControl1.Location = new System.Drawing.Point(12, 5);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
@@ -270,6 +272,18 @@
       this.pictureBox2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseDown);
       this.pictureBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseUp);
       // 
+      // tabPage3
+      // 
+      this.tabPage3.Location = new System.Drawing.Point(4, 22);
+      this.tabPage3.Name = "tabPage3";
+      this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage3.Size = new System.Drawing.Size(1152, 618);
+      this.tabPage3.TabIndex = 2;
+      this.tabPage3.Text = "make_pair";
+      this.tabPage3.UseVisualStyleBackColor = true;
+      this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+      this.tabPage3.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPage3_Paint);
+      // 
       // openFileDialog1
       // 
       this.openFileDialog1.FileName = "openFileDialog1";
@@ -304,6 +318,7 @@
     private System.Windows.Forms.TabControl tabControl1;
     private System.Windows.Forms.TabPage tabPage1;
     private System.Windows.Forms.TabPage tabPage2;
+    private System.Windows.Forms.TabPage tabPage3;
     private System.Windows.Forms.PictureBox pictureBox1;
     private System.Windows.Forms.PictureBox pictureBox2;
     private System.Windows.Forms.Button button2;
