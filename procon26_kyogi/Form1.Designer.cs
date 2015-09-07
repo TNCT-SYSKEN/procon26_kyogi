@@ -51,10 +51,10 @@
       this.tabPage3 = new System.Windows.Forms.TabPage();
       this.textBox5 = new System.Windows.Forms.TextBox();
       this.make_pair_button = new System.Windows.Forms.Button();
+      this.pictureBox3 = new System.Windows.Forms.PictureBox();
       this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
       this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
       this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-      this.pictureBox3 = new System.Windows.Forms.PictureBox();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -310,14 +310,6 @@
       this.make_pair_button.UseVisualStyleBackColor = true;
       this.make_pair_button.Click += new System.EventHandler(this.make_pair_button_Click);
       // 
-      // openFileDialog1
-      // 
-      this.openFileDialog1.FileName = "openFileDialog1";
-      // 
-      // openFileDialog2
-      // 
-      this.openFileDialog2.FileName = "openFileDialog1";
-      // 
       // pictureBox3
       // 
       this.pictureBox3.Location = new System.Drawing.Point(-4, 0);
@@ -325,6 +317,16 @@
       this.pictureBox3.Size = new System.Drawing.Size(1156, 618);
       this.pictureBox3.TabIndex = 2;
       this.pictureBox3.TabStop = false;
+      this.pictureBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseClick);
+      this.pictureBox3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseDown);
+      // 
+      // openFileDialog1
+      // 
+      this.openFileDialog1.FileName = "openFileDialog1";
+      // 
+      // openFileDialog2
+      // 
+      this.openFileDialog2.FileName = "openFileDialog1";
       // 
       // Form1
       // 

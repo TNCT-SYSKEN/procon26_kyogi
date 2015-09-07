@@ -41,10 +41,24 @@ namespace procon26_kyogi
     //ピース
     int[, ,] item = new int[256, 8, 8];
 
+    public class Obj
+    {
+      public int num;
+      public int x;
+      public int y;
+      public int routen;
+      public int sur;
+      public Obj(int Num, int X, int Y, int Routen, int Sur)
+      {
+        num = Num;
+        x = X;
+        y = Y;
+        routen = Routen;
+        sur = Sur;
+      }
+    }
     //条件付きのリスト
-    ArrayList v = new ArrayList();
-    ArrayList adrx = new ArrayList();
-    ArrayList adry = new ArrayList();
+    List<Obj> fdata = new List<Obj>(); 
 
 
     //初期化やファイル読み込み
@@ -298,12 +312,12 @@ namespace procon26_kyogi
       Bitmap canvas = new Bitmap(pictureBox3.Width, pictureBox3.Height);
       //ImageオブジェクトのGraphicsオブジェクトを作成する
       Graphics g = Graphics.FromImage(canvas);
-      for (int k = 0; k < v.Count; k++)
+      for (int k = 0; k < fdata.Count; k++)
       {
         for (int i = 0; i < 8; i++)
           for (int j = 0; j < 8; j++)
-            if(item[(int)v[k], i, j] == 1)
-            g.FillRectangle(Brushes.Aqua, (int)adrx[k]+j*7, (int)adry[k]+i*7, 7, 7);
+            if(item[(int)fdata[k].num, i, j] == 1)
+            g.FillRectangle(Brushes.Aqua, (int)fdata[k].x+j*7, (int)fdata[k].y+i*7, 7, 7);
       }
       //リソースを解放する
       g.Dispose();
@@ -673,9 +687,7 @@ namespace procon26_kyogi
         a++;
       }
       //条件で選別
-      v.Clear();
-      adry.Clear();
-      adrx.Clear();
+      fdata.Clear();
       for (int k = 0; k < pieces; k++)
       {
         int sum = 0;
@@ -684,15 +696,15 @@ namespace procon26_kyogi
             if (item[k, i, j] == 1)
               sum++;
         if (max == 0 && min <= sum)
-          v.Add(k);
+          fdata.Add(new Obj(k, 0, 0, 0, 0));
         else if (max >= sum && min <= sum)
-          v.Add(k);
+          fdata.Add(new Obj(k, 0, 0, 0, 0));
       }
-      textBox5.Text = Convert.ToString(v.Count);
-      for (int i = 0; i < v.Count; i++)
+      textBox5.Text = Convert.ToString(fdata.Count);
+      for (int i = 0; i < fdata.Count; i++)
       {
-        adrx.Add(56 * (int)(i / 10) + 10);
-        adry.Add(56 * (i % 10) + 60);
+        fdata[i].x = 56 * (int)(i / 10) + 10; 
+        fdata[i].y = 56 * (int)(i % 10) + 60; 
       }
     }
 
@@ -703,6 +715,33 @@ namespace procon26_kyogi
         //押されたキーが 0～9でない場合は、イベントをキャンセルする
         e.Handled = true;
       }*/
+    }
+
+    private void pictureBox3_MouseDown(object sender, MouseEventArgs e)
+    {
+      //フォーム上の座標でマウスポインタの位置を取得する
+      //画面座標でマウスポインタの位置を取得する
+      System.Drawing.Point sp = System.Windows.Forms.Cursor.Position;
+      //画面座標をクライアント座標に変換する
+      System.Drawing.Point cp = this.PointToClient(sp);
+    }
+
+    private void pictureBox3_MouseClick(object sender, MouseEventArgs e)
+    {
+      //フォーム上の座標でマウスポインタの位置を取得する
+      //画面座標でマウスポインタの位置を取得する
+      System.Drawing.Point sp = System.Windows.Forms.Cursor.Position;
+      //画面座標をクライアント座標に変換する
+      System.Drawing.Point cp = this.PointToClient(sp);
+      for (int k = 0; k < fdata.Count; k++)
+      {
+        for (int i = 0; i < 8; i++)
+          for (int j = 0; j < 8; j++)
+            /*if (item[(int)fdata[k].num, i, j] == 1 && (cp.X - (int)fdata[k].x) <= 7 && (cp.Y - (int)fdata[k].y) <= 7)
+            {
+
+            }*/
+      }
     }
 
 
