@@ -43,6 +43,8 @@ namespace procon26_kyogi
 
     //条件付きのリスト
     ArrayList v = new ArrayList();
+    ArrayList adrx = new ArrayList();
+    ArrayList adry = new ArrayList();
 
 
     //初期化やファイル読み込み
@@ -292,7 +294,21 @@ namespace procon26_kyogi
 
     private void tabPage3_Paint(object sender, PaintEventArgs e)
     {
-
+      //描画先とするImageオブジェクトを作成する
+      Bitmap canvas = new Bitmap(pictureBox3.Width, pictureBox3.Height);
+      //ImageオブジェクトのGraphicsオブジェクトを作成する
+      Graphics g = Graphics.FromImage(canvas);
+      for (int k = 0; k < v.Count; k++)
+      {
+        for (int i = 0; i < 8; i++)
+          for (int j = 0; j < 8; j++)
+            if(item[(int)v[k], i, j] == 1)
+            g.FillRectangle(Brushes.Aqua, (int)adrx[k]+j*7, (int)adry[k]+i*7, 7, 7);
+      }
+      //リソースを解放する
+      g.Dispose();
+      //PictureBox3に表示する
+      pictureBox3.Image = canvas;
     }
 
     //クリックダウン
@@ -616,15 +632,76 @@ namespace procon26_kyogi
 
     private void tabPage3_Click(object sender, EventArgs e)
     {
+    }
+
+    private void make_pair_button_Click(object sender, EventArgs e)
+    {
+      //make_pair button
+      System.Text.Encoding.GetEncoding("us-ascii");
+      string t = textBox5.Text;
+      int a = 0;
+      int min = 100;
+      int max = 0;
+      while (t.Length > a)
+      {
+        if(t[a] != ' '){
+          if (t.Length > (a + 1))
+          {
+            if(t[a+1] != ' '){
+              if (min == 100)
+                min = Convert.ToInt32(t[a] -'0')*10 + Convert.ToInt32(t[a + 1] -'0');
+              else
+                max = Convert.ToInt32(t[a] -'0')*10 + Convert.ToInt32(t[a + 1] -'0');
+              a++;
+            }
+            else
+            {
+              if (min == 100)
+                min = Convert.ToInt32(t[a] - '0');
+              else
+                max = Convert.ToInt32(t[a] - '0');
+            }
+          }
+          else
+          {
+            if (min == 100)
+              min = Convert.ToInt32(t[a] - '0');
+            else
+              max = Convert.ToInt32(t[a] - '0');
+          }
+        }
+        a++;
+      }
       //条件で選別
-      /*for (int k = 0; k < pieces; k++)
+      v.Clear();
+      adry.Clear();
+      adrx.Clear();
+      for (int k = 0; k < pieces; k++)
       {
         int sum = 0;
         for (int i = 0; i < 8; i++)
           for (int j = 0; j < 8; j++)
             if (item[k, i, j] == 1)
               sum++;
-        if(sum  >= 5)
+        if (max == 0 && min <= sum)
+          v.Add(k);
+        else if (max >= sum && min <= sum)
+          v.Add(k);
+      }
+      textBox5.Text = Convert.ToString(v.Count);
+      for (int i = 0; i < v.Count; i++)
+      {
+        adrx.Add(56 * (int)(i / 10) + 10);
+        adry.Add(56 * (i % 10) + 60);
+      }
+    }
+
+    private void textBox5_KeyPress(object sender, KeyPressEventArgs e)
+    {
+      /*if (!(char.IsNumber(e.KeyChar)) && !(char.IsWhiteSpace(e.KeyChar)) && !(e.KeyCode == Keys.Back))
+      {
+        //押されたキーが 0～9でない場合は、イベントをキャンセルする
+        e.Handled = true;
       }*/
     }
 

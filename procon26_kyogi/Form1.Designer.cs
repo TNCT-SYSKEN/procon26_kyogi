@@ -49,14 +49,19 @@
       this.button1 = new System.Windows.Forms.Button();
       this.pictureBox2 = new System.Windows.Forms.PictureBox();
       this.tabPage3 = new System.Windows.Forms.TabPage();
+      this.textBox5 = new System.Windows.Forms.TextBox();
+      this.make_pair_button = new System.Windows.Forms.Button();
       this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
       this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
       this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+      this.pictureBox3 = new System.Windows.Forms.PictureBox();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.tabPage2.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+      this.tabPage3.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
       this.SuspendLayout();
       // 
       // tabControl1
@@ -274,6 +279,9 @@
       // 
       // tabPage3
       // 
+      this.tabPage3.Controls.Add(this.textBox5);
+      this.tabPage3.Controls.Add(this.make_pair_button);
+      this.tabPage3.Controls.Add(this.pictureBox3);
       this.tabPage3.Location = new System.Drawing.Point(4, 22);
       this.tabPage3.Name = "tabPage3";
       this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -284,6 +292,24 @@
       this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
       this.tabPage3.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPage3_Paint);
       // 
+      // textBox5
+      // 
+      this.textBox5.Location = new System.Drawing.Point(6, 6);
+      this.textBox5.Name = "textBox5";
+      this.textBox5.Size = new System.Drawing.Size(132, 19);
+      this.textBox5.TabIndex = 1;
+      this.textBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox5_KeyPress);
+      // 
+      // make_pair_button
+      // 
+      this.make_pair_button.Location = new System.Drawing.Point(6, 31);
+      this.make_pair_button.Name = "make_pair_button";
+      this.make_pair_button.Size = new System.Drawing.Size(132, 23);
+      this.make_pair_button.TabIndex = 0;
+      this.make_pair_button.Text = "絞る";
+      this.make_pair_button.UseVisualStyleBackColor = true;
+      this.make_pair_button.Click += new System.EventHandler(this.make_pair_button_Click);
+      // 
       // openFileDialog1
       // 
       this.openFileDialog1.FileName = "openFileDialog1";
@@ -291,6 +317,14 @@
       // openFileDialog2
       // 
       this.openFileDialog2.FileName = "openFileDialog1";
+      // 
+      // pictureBox3
+      // 
+      this.pictureBox3.Location = new System.Drawing.Point(-4, 0);
+      this.pictureBox3.Name = "pictureBox3";
+      this.pictureBox3.Size = new System.Drawing.Size(1156, 618);
+      this.pictureBox3.TabIndex = 2;
+      this.pictureBox3.TabStop = false;
       // 
       // Form1
       // 
@@ -309,6 +343,9 @@
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.tabPage2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+      this.tabPage3.ResumeLayout(false);
+      this.tabPage3.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -339,6 +376,9 @@
     private System.Windows.Forms.OpenFileDialog openFileDialog1;
     private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     private System.Windows.Forms.OpenFileDialog openFileDialog2;
+    private System.Windows.Forms.Button make_pair_button;
+    private System.Windows.Forms.TextBox textBox5;
+    private System.Windows.Forms.PictureBox pictureBox3;
   }
 }
 
