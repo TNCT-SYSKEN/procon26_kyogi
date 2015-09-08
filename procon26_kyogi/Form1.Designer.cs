@@ -317,8 +317,9 @@
       this.pictureBox3.Size = new System.Drawing.Size(1156, 618);
       this.pictureBox3.TabIndex = 2;
       this.pictureBox3.TabStop = false;
-      this.pictureBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseClick);
       this.pictureBox3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseDown);
+      this.pictureBox3.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseMove);
+      this.pictureBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox3_MouseUp);
       // 
       // openFileDialog1
       // 

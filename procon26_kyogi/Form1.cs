@@ -21,8 +21,6 @@ namespace procon26_kyogi
     //定数
     const int MAP = 32, width = 17, length = 17, mass_begin = 203, mass_end = 882;
 
-    //現在選択中のピース
-    int[,] item_test = new int[8, 8];
     //クリックフラグ
     int click_down_flag = 0, click_up_flag = 0;
     //ピースの総数
@@ -35,12 +33,17 @@ namespace procon26_kyogi
     int[,] map = new int[32, 32];
     //現在配置されているピースの総数
     int sum = 0;
+    //使われたピース番号
+    int[] used = new int[256];
+
     //ピースの提出データ
     /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
     int[,] data = new int[256, 5];
     //ピース
     int[, ,] item = new int[256, 8, 8];
 
+
+    //make_pair
     public class Obj
     {
       public int num;
@@ -58,18 +61,16 @@ namespace procon26_kyogi
       }
     }
     //条件付きのリスト
-    List<Obj> fdata = new List<Obj>(); 
+    List<Obj> fdata = new List<Obj>();
 
 
     //初期化やファイル読み込み
     private void Form1_Load(object sender, EventArgs e)
     {
-
-      //テスト用にパーツの作成
+       //テスト用にパーツの作成
 
       for (int i = 0; i < 256; i++)
         data[i, 4] = -1;
-
     }
 
     private void tabPage1_Paint(object sender, PaintEventArgs e)
@@ -86,15 +87,15 @@ namespace procon26_kyogi
           //block
           if (map[i, j] == 1)
             g.FillRectangle(Brushes.Black, (400 + j * width), 0 + i * length, 1 + width, 1 + length);
-          else if(map[i, j] >= 2)
-            g.FillRectangle(Brushes.Aqua, (400 + j * width) + 1, 0 + i * length + 1,  width, length);
+          else if (map[i, j] >= 2)
+            g.FillRectangle(Brushes.Aqua, (400 + j * width) + 1, 0 + i * length + 1, width, length);
         }
       }
       for (int i = 0; i <= MAP; i++)
       {
         //(x, y)-(x, y)に、幅1の黒い線を引く
-        g.DrawLine(Pens.Black, (400), 0 + i * length , (400 + 32 * width ), 0 + i * length );
-        g.DrawLine(Pens.Black, (400 + i * width ), 0, (400 + i * width ), 0 + 32 * length );
+        g.DrawLine(Pens.Black, (400), 0 + i * length, (400 + 32 * width), 0 + i * length);
+        g.DrawLine(Pens.Black, (400 + i * width), 0, (400 + i * width), 0 + 32 * length);
       }
       //リソースを解放する
       g.Dispose();
@@ -168,7 +169,7 @@ namespace procon26_kyogi
             for (int k = 0; k < 8; k++)
               if (i == 0)
               {
-                if (item_test[j, k] == 1)
+                if (item[count, j, k] == 1)
                   g.FillRectangle(Brushes.Aqua, (850 + k * width + 1), i * 160 + j * length + 1, width - 1, length - 1);
               }
               else if (item[count + i, j, k] == 1)
@@ -205,7 +206,7 @@ namespace procon26_kyogi
                 else
                   g.FillRectangle(Brushes.Aqua, (15 + i / 5 * 125 + k * 13 + 1), i % 5 * 125 + j * 13 + 1, 12, 12);
 
-        if (data[a, 4] == count - 10 + i) a++;
+        if (data[a,4] == count - 10 + i) a++;
       }
 
       //フォーム上の座標でマウスポインタの位置を取得する
@@ -232,7 +233,7 @@ namespace procon26_kyogi
         {
           for (int j = 0; j < 8; j++)
           {
-            if (item_test[i, j] == 1)
+            if (item[count, i, j] == 1)
             {
               if (cp.X >= mass_begin && cp.X <= mass_end)
               {
@@ -266,27 +267,14 @@ namespace procon26_kyogi
         if (click_down_flag == 1 && block_check == 0 && mass_begin <= cp.X && mass_end >= cp.X)
         {
           for (int i = 0; i < 8; i++)
-          {
             for (int j = 0; j < 8; j++)
-            {
-              if (item_test[i, j] == 1 && (i + y) >= 0 && (j + x) >= 0 && (i + y) < 32 && (j + x) < 32)
-              {
+              if (item[count, i, j] == 1 && (i + y) >= 0 && (j + x) >= 0 && (i + y) < 32 && (j + x) < 32)
                 map[i + y, j + x] = count + 2;
-              }
-            }
-          }
           data[sum, 4] = count;
+          used[sum] = count;
           sum++;
           if (count < pieces)
-          {
             count++;
-            for (int i = 0; i < 8; i++)
-              for (int j = 0; j < 8; j++)
-                if (count < pieces)
-                  item_test[i, j] = item[count, i, j];
-                else
-                  item_test[i, j] = 0;
-          }
         }
         click_down_flag = 0;
       }
@@ -316,8 +304,8 @@ namespace procon26_kyogi
       {
         for (int i = 0; i < 8; i++)
           for (int j = 0; j < 8; j++)
-            if(item[(int)fdata[k].num, i, j] == 1)
-            g.FillRectangle(Brushes.Aqua, (int)fdata[k].x+j*7, (int)fdata[k].y+i*7, 7, 7);
+            if (item[(int)fdata[k].num, i, j] == 1)
+              g.FillRectangle(Brushes.Aqua, (int)fdata[k].x + j * 7, (int)fdata[k].y + i * 7, 7, 7);
       }
       //リソースを解放する
       g.Dispose();
@@ -355,12 +343,10 @@ namespace procon26_kyogi
             if (map[i, j] == count + 1)
               map[i, j] = 0;
         count--;
-        for (int i = 0; i < 8; i++)
-          for (int j = 0; j < 8; j++)
-            item_test[i, j] = item[count, i, j];
         if (sum > 0 && count == data[sum - 1, 4])
         {
           data[sum - 1, 4] = -1;
+          used[sum - 1] = -1;
           sum--;
         }
       }
@@ -370,15 +356,7 @@ namespace procon26_kyogi
     private void button2_Click(object sender, EventArgs e)
     {
       if (count < pieces)
-      {
         count++;
-        for (int i = 0; i < 8; i++)
-          for (int j = 0; j < 8; j++)
-            if (count < pieces)
-              item_test[i, j] = item[count, i, j];
-            else
-              item_test[i, j] = 0;
-      }
     }
 
     //反時計回り
@@ -388,19 +366,19 @@ namespace procon26_kyogi
       //4分割して入れ替える
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          aaa[i, j] = item_test[i, j];
+          aaa[i, j] = item[count, i, j];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[i, j] = item_test[j, 7 - i];
+          item[count, i, j] = item[count, j, 7 - i];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[j, 7 - i] = item_test[7 - i, 7 - j];
+          item[count, j, 7 - i] = item[count, 7 - i, 7 - j];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[7 - i, 7 - j] = item_test[7 - j, i];
+          item[count, 7 - i, 7 - j] = item[count, 7 - j, i];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[7 - j, i] = aaa[i, j];
+          item[count, 7 - j, i] = aaa[i, j];
 
       data[sum, 3] += 270;
       data[sum, 3] %= 360;
@@ -413,19 +391,19 @@ namespace procon26_kyogi
       //4分割して入れ替える
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          aaa[i, j] = item_test[i, j];
+          aaa[i, j] = item[count, i, j];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[i, j] = item_test[7 - j, i];
+          item[count, i, j] = item[count, 7 - j, i];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[7 - j, i] = item_test[7 - i, 7 - j];
+          item[count, 7 - j, i] = item[count, 7 - i, 7 - j];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[7 - i, 7 - j] = item_test[j, 7 - i];
+          item[count, 7 - i, 7 - j] = item[count, j, 7 - i];
       for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-          item_test[j, 7 - i] = aaa[i, j];
+          item[count, j, 7 - i] = aaa[i, j];
 
       data[sum, 3] += 90;
       data[sum, 3] %= 360;
@@ -438,13 +416,13 @@ namespace procon26_kyogi
       //左半分と右半分を入れ替える
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          aaa[i, j] = item_test[i, j];
+          aaa[i, j] = item[count, i, j];
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          item_test[i, j] = item_test[i, 7 - j];
+          item[count, i, j] = item[count, i, 7 - j];
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          item_test[i, 7 - j] = aaa[i, j];
+          item[count, i, 7 - j] = aaa[i, j];
 
       data[sum, 2]++;
       data[sum, 2] %= 2;
@@ -584,10 +562,11 @@ namespace procon26_kyogi
       txtTarget.Text = fileName[0];
 
       count = 0;
-      for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-          item_test[i, j] = item[count, i, j];
-
+      for (int i = 0; i < pieces; i++)
+      {
+        for (int j = 0; j < 4; j++)
+          data[i, j] = 0;
+      }
     }
 
     private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -658,14 +637,16 @@ namespace procon26_kyogi
       int max = 0;
       while (t.Length > a)
       {
-        if(t[a] != ' '){
+        if (t[a] != ' ')
+        {
           if (t.Length > (a + 1))
           {
-            if(t[a+1] != ' '){
+            if (t[a + 1] != ' ')
+            {
               if (min == 100)
-                min = Convert.ToInt32(t[a] -'0')*10 + Convert.ToInt32(t[a + 1] -'0');
+                min = Convert.ToInt32(t[a] - '0') * 10 + Convert.ToInt32(t[a + 1] - '0');
               else
-                max = Convert.ToInt32(t[a] -'0')*10 + Convert.ToInt32(t[a + 1] -'0');
+                max = Convert.ToInt32(t[a] - '0') * 10 + Convert.ToInt32(t[a + 1] - '0');
               a++;
             }
             else
@@ -703,8 +684,8 @@ namespace procon26_kyogi
       textBox5.Text = Convert.ToString(fdata.Count);
       for (int i = 0; i < fdata.Count; i++)
       {
-        fdata[i].x = 56 * (int)(i / 10) + 10; 
-        fdata[i].y = 56 * (int)(i % 10) + 60; 
+        fdata[i].x = 56 * (int)(i / 10) + 10;
+        fdata[i].y = 56 * (int)(i % 10) + 60;
       }
     }
 
@@ -717,6 +698,8 @@ namespace procon26_kyogi
       }*/
     }
 
+    int move_flag = 0;
+    int move_piece = 0;
     private void pictureBox3_MouseDown(object sender, MouseEventArgs e)
     {
       //フォーム上の座標でマウスポインタの位置を取得する
@@ -724,23 +707,95 @@ namespace procon26_kyogi
       System.Drawing.Point sp = System.Windows.Forms.Cursor.Position;
       //画面座標をクライアント座標に変換する
       System.Drawing.Point cp = this.PointToClient(sp);
+      int flag = 0;
+      for (int k = 0; k < fdata.Count; k++)
+      {
+        int a = cp.X - 12;
+        int b = cp.Y - 27;
+        for (int i = 0; i < 8; i++)
+        {
+          for (int j = 0; j < 8; j++)
+          {
+            int X = a - (fdata[k].x + j * 7);
+            int Y = b - (fdata[k].y + i * 7);
+            if (item[(int)fdata[k].num, i, j] == 1 && X <= 7 && X > 0 &&  Y <= 7 && Y > 0)
+            {
+              if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+              {
+                int[,] aaa = new int[8, 4];
+                //左半分と右半分を入れ替える
+                for (int y = 0; y < 8; y++)
+                  for (int x = 0; x < 4; x++)
+                    aaa[y, x] = item[fdata[k].num, y, x];
+                for (int y = 0; y < 8; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, y, x] = item[fdata[k].num, y, 7 - x];
+                for (int y = 0; y < 8; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, y, 7 - x] = aaa[y, x];
+
+                data[fdata[k].num, 2]++;
+                data[fdata[k].num, 2] %= 2;
+              }
+              else if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+              {
+                int[,] aaa = new int[4, 4];
+                //4分割して入れ替える
+                for (int y = 0; y < 4; y++)
+                  for (int x = 0; x < 4; x++)
+                    aaa[y, x] = item[fdata[k].num, y, x];
+                for (int y = 0; y < 4; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, y, x] = item[fdata[k].num, 7 - x, y];
+                for (int y = 0; y < 4; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, 7 - x, y] = item[fdata[k].num, 7 - y, 7 - x];
+                for (int y = 0; y < 4; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, 7 - y, 7 - x] = item[fdata[k].num, x, 7 - y];
+                for (int y = 0; y < 4; y++)
+                  for (int x = 0; x < 4; x++)
+                    item[fdata[k].num, x, 7 - y] = aaa[y, x];
+
+                data[fdata[k].num, 3] += 90;
+                data[fdata[k].num, 3] %= 360;
+              }
+              else
+              {
+                move_flag = 1;
+                move_piece = k;
+              }
+              flag = 1;
+              break;
+            }
+            if (flag == 1)
+              break;
+          }
+          if (flag == 1)
+            break;
+        }
+        if (flag == 1)
+          break;
+      }
     }
 
-    private void pictureBox3_MouseClick(object sender, MouseEventArgs e)
+
+    private void pictureBox3_MouseUp(object sender, MouseEventArgs e)
+    {
+      move_flag = 0;
+    }
+
+    private void pictureBox3_MouseMove(object sender, MouseEventArgs e)
     {
       //フォーム上の座標でマウスポインタの位置を取得する
       //画面座標でマウスポインタの位置を取得する
       System.Drawing.Point sp = System.Windows.Forms.Cursor.Position;
       //画面座標をクライアント座標に変換する
       System.Drawing.Point cp = this.PointToClient(sp);
-      for (int k = 0; k < fdata.Count; k++)
+      if (move_flag == 1)
       {
-        for (int i = 0; i < 8; i++)
-          for (int j = 0; j < 8; j++)
-            /*if (item[(int)fdata[k].num, i, j] == 1 && (cp.X - (int)fdata[k].x) <= 7 && (cp.Y - (int)fdata[k].y) <= 7)
-            {
-
-            }*/
+        fdata[move_piece].x = cp.X - 12;
+        fdata[move_piece].y = cp.Y - 27;
       }
     }
 
