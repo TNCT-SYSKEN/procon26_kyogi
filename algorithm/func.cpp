@@ -4,7 +4,10 @@
 #include <fstream>
 #include<string>
 #include <windows.h>
-#include "algorithm.h"
+
+#include "func.h"
+#include "map"
+#include "piece.h"
 
 void screen(std::vector<std::vector<int> > map){
 	system("cls");
@@ -28,7 +31,7 @@ void screen(std::vector<std::vector<int> > map){
 	printf("\n");
 }
 
-void input(algorithm& p){
+void input(Map& map1, Piece& piece){
   //ファイル入力ストリームの初期化
 	std::ifstream ifs("input.txt");
 	std::string line;
@@ -64,7 +67,8 @@ void input(algorithm& p){
 		else
 			t = 0;
 	}
-	p.set(map, parts, sum);
+	map1.set(map);
+	piece.set(parts, sum)
 }
 
 void output(std::vector<std::vector<int> > out){

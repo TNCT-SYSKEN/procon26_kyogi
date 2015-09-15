@@ -3,18 +3,19 @@
 #include<vector>
 #include<string>
 #include<math.h>
-#include"algorithm.h"
+
+#include"piece.h"
 #include"func.h"
+#include "map.h"
 using namespace std;
 
 int main(){
-	algorithm p;
+	Map map;
+	Piece piece;
 
-  input(p);
+  input(map, piece);
 
-	p.run();
-	
-	output(p.get_out());
+	output(piece.get_out());
 
   //ドラッグ＆ドロップ用
   /*ifstream ifs(argv[1], 1);

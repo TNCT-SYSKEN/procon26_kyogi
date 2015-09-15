@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-#include "algorithm.h"
+#include "map.h"
+#include "piece.h"
 
-void input(algorithm&);
+void input(Map&, Piece&);
 void output(std::vector<std::vector<int> >);
 void screen(std::vector<std::vector<int> >);

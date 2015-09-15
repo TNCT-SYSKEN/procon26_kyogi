@@ -24,12 +24,24 @@
     <ClCompile Include="func.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="piece.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="func.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="algorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
