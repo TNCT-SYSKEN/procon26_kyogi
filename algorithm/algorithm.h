@@ -15,9 +15,9 @@ private:
 public:
     algorithm();
 	//ファイルの入力
-	void input_file();
+	void set(std::vector<std::vector<int> >, std::vector<std::vector<std::vector<int> >>, int);
 	//ファイルへ出力
-	void output_file();
+	std::vector<std::vector<int> > get_out();
 	//アルゴリズム実行
 	void run();
 	//順位付け

@@ -4,16 +4,17 @@
 #include<string>
 #include<math.h>
 #include"algorithm.h"
+#include"func.h"
 using namespace std;
 
 int main(){
 	algorithm p;
 
-  p.input_file();
+  input(p);
 
 	p.run();
 	
-	p.output_file();
+	output(p.get_out());
 
   //ドラッグ＆ドロップ用
   /*ifstream ifs(argv[1], 1);
