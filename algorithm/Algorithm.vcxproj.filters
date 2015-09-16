@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="algorithm.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="func.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="func.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="map.h">

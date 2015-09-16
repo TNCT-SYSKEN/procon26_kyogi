@@ -31,6 +31,16 @@ void screen(std::vector<std::vector<int> > map){
 	printf("\n");
 }
 
+void screen_v(std::vector<std::vector<int> > v){
+	for (int i = 0; i < 32; i++){
+		for (int j = 0; j < 32; j++)
+			if (v[i][j] == -1)
+				std::cout << "*";
+			else 
+				std::cout << v[i][j];
+	std::cout << std::endl;
+	}
+}
 void input(Map& map1, Piece& piece){
   //ファイル入力ストリームの初期化
 	std::ifstream ifs("input.txt");
@@ -68,7 +78,7 @@ void input(Map& map1, Piece& piece){
 			t = 0;
 	}
 	map1.set(map);
-	piece.set(parts, sum)
+	piece.set(parts, sum);
 }
 
 void output(std::vector<std::vector<int> > out){
