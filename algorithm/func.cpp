@@ -41,6 +41,7 @@ void screen_v(std::vector<std::vector<int> > v){
 	std::cout << std::endl;
 	}
 }
+
 void input(Map& map1, Piece& piece){
   //ファイル入力ストリームの初期化
 	std::ifstream ifs("input.txt");

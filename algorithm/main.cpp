@@ -15,8 +15,6 @@ int main(){
 
   input(map, piece);
 
-	screen_v(map.v);
-
 	output(piece.get_out());
 
   //ドラッグ＆ドロップ用
