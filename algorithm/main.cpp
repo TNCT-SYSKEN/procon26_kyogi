@@ -11,11 +11,24 @@ using namespace std;
 
 int main(){
 	Map map;
-	Piece piece;
+	std::vector<Piece> piece;
+	int sum;
 
-  input(map, piece);
+	input_sum(sum);
+  input(map, piece, sum);
 
-	output(piece.get_out());
+	/*for (int k = 0; k < sum; k++){
+		for (int i = 0; i < 8; i++){
+			for (int j = 0; j < 8; j++)
+				std::cout << piece[k].parts[i][j];
+			std::cout << std::endl;
+		}
+	}*/
+
+	//screen_v(map.v);
+
+	
+	//output();
 
   //ドラッグ＆ドロップ用
   /*ifstream ifs(argv[1], 1);

@@ -36,19 +36,37 @@ void screen_v(std::vector<std::vector<int> > v){
 		for (int j = 0; j < 32; j++)
 			if (v[i][j] == -1)
 				std::cout << "*";
-			else 
+			else
 				std::cout << v[i][j];
-	std::cout << std::endl;
+		std::cout << std::endl;
 	}
 }
 
-void input(Map& map1, Piece& piece){
-  //ファイル入力ストリームの初期化
+void input_sum(int& sum){
+	//ファイル入力ストリームの初期化
+	std::ifstream ifs("input.txt");
+	std::string line;
+	//1ファイルの中身を一行ずつ追加
+	while (getline(ifs, line)){
+		if (line.size() > 0 && line.size() < 4){
+			sum = atoi(line.c_str());
+		}
+	}
+}
+
+void input(Map& map1, std::vector<Piece>& piece, int sum){
+	//ファイル入力ストリームの初期化
 	std::ifstream ifs("input.txt");
 	std::string line;
 	std::vector<std::vector<int> > map(32, std::vector<int>(32));
-	std::vector<std::vector<std::vector<int> >> parts;
-	int N=0, t=0, sum;
+	piece.resize(sum);
+	for (int i = 0; i < sum; i++) {
+		piece[i].parts.resize(8);
+		for (int j = 0; j < 8; j++) {
+			piece[i].parts[j].resize(8);
+		}
+	}
+	int N = 0, t = 0;
 	//1ファイルの中身を一行ずつ追加
 	while (getline(ifs, line)){
 		if (line.size() == 32){
@@ -58,41 +76,33 @@ void input(Map& map1, Piece& piece){
 		}
 		else if (line.size() == 8){
 			for (int i = 0; i < 8; i++)
-				parts[N][t][i] = (int)(line[i] - '0');
+				piece[N].parts[t][i] = (int)(line[i] - '0');
 			if (t == 7){
 				N++;
 			}
 			t++;
 		}
 		else if (line.size() != 0){
-			sum = atoi(line.c_str());
-			//石と出力用の要素をとる
-			parts.resize(sum);
-			for (int i = 0; i < sum; i++) {
-				parts[i].resize(8);
-				for (int j = 0; j < 8; j++) {
-					parts[i][j].resize(8);
-				}
-			}
 		}
 		else
 			t = 0;
 	}
 	map1.set(map);
-	piece.set(parts, sum);
+	for (int i = 0; i < sum; i++)
+		piece[i].set();
 }
 
 void output(std::vector<std::vector<int> > out){
 	std::ofstream ofs("output.txt");
 	std::cout << out.size() << std::endl;
-	
 
-	for(int i=0;i<(int)out.size();i++){
-		if(i!=0)	ofs << std::endl;
-		
-		if(out[i][2] == 0)//表
+
+	for (int i = 0; i < (int)out.size(); i++){
+		if (i != 0)	ofs << std::endl;
+
+		if (out[i][2] == 0)//表
 			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][3];
-		else if(out[i][2] == 1)//裏
+		else if (out[i][2] == 1)//裏
 			ofs << out[i][0] << " " << out[i][1] << " H " << out[i][3];
 	}
 }
