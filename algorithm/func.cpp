@@ -9,6 +9,30 @@
 #include "map"
 #include "piece.h"
 
+void put(Piece& piece){
+
+}
+
+void search_place(std::vector<std::vector<int> > v, std::vector<std::vector<std::vector<int> >>& place){
+	for (int i = 0; i < 32; i++){
+		for (int j = 0; j < 32; j++){
+			if (v[i][j] == 3){
+
+			}
+				/*for (int k = i - 5; k < (i+5); k++){
+					for (int s = j - 5; s < (j + 5); s++)
+						if (k >= 0 && s >= 0 && k < 32 && s < 32)
+							if (v[k][s] == -1)
+								std::cout << "*";
+							else
+								std::cout << v[k][s];
+						std::cout << std::endl;
+				}*/
+		}
+		std::cout << std::endl;
+	}
+}
+
 void screen(std::vector<std::vector<int> > map){
 	system("cls");
 	for (int i = 0; i < 34; i++)
@@ -44,7 +68,7 @@ void screen_v(std::vector<std::vector<int> > v){
 
 void input_sum(int& sum){
 	//ファイル入力ストリームの初期化
-	std::ifstream ifs("input.txt");
+	std::ifstream ifs("Debug/quest9.txt");
 	std::string line;
 	//1ファイルの中身を一行ずつ追加
 	while (getline(ifs, line)){
@@ -56,7 +80,7 @@ void input_sum(int& sum){
 
 void input(Map& map1, std::vector<Piece>& piece, int sum){
 	//ファイル入力ストリームの初期化
-	std::ifstream ifs("input.txt");
+	std::ifstream ifs("Debug/quest9.txt");
 	std::string line;
 	std::vector<std::vector<int> > map(32, std::vector<int>(32));
 	piece.resize(sum);

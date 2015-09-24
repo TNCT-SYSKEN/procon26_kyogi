@@ -1,9 +1,16 @@
 #pragma once;
+#include <vector>
+#include <map>
+
+#include "piece.h"
+#include "map.h"
 
 class Map{
 private:
   //マップデータ
 	std::vector<std::vector<int> > map;
+	//すでに敷いてるピースの隣接している空マスのアドレスを格納
+	std::vector<std::pair<int,int> > adress;
 public:
 	//隣接している数を格納
 	std::vector<std::vector<int> > v;
@@ -11,4 +18,8 @@ public:
 	void set(std::vector<std::vector<int> >);
 	//隣接数の更新
 	void updata_v();
+	//敷くことができれば敷く
+	bool lay(Piece, int, int, int);
+	//すでにピースを敷いているか
+	bool already();
 };
