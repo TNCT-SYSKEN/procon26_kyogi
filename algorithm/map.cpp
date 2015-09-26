@@ -55,6 +55,7 @@ bool Map::already(){
 			}
 		}
 	}
+	return true;
 }
 
 void Map::set(std::vector<std::vector<int> > Map){
