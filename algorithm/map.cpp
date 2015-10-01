@@ -76,7 +76,7 @@ void Map::updata_v(){
 	int x[4] = { -1, 0, 1, 0 };
 	int y[4] = { 0, 1, 0, -1 };
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < 32; i++){
 		for (int j = 0; j < 32; j++){
 			int sum = 0;
 			if (map[i][j] == 1){
@@ -91,4 +91,74 @@ void Map::updata_v(){
 			}
 			v[i][j] = sum;
 		}
+	}
+
+	//まわりを文字列化
+	flag = 0;
+	int vec[32][32] = { 0 };
+	int data[32][32];
+	for (int i = 0; i < 32; i++)
+		for (int j = 0; j < 32; j++)
+			data[i][j] = map[i][j];
+	for (int YY = 0; YY < 32; YY++){
+		for (int XX = 0; XX < 32; XX++)
+			if (map[YY][XX] == 0){
+				Y = YY;
+				X = XX;
+				search(Y, X, vec, 1);
+				break;
+			}
+		if (v[Y][X] == 0)
+			break;
+	}
+}
+
+void Map::search(int y, int x, int vec[][32], int way){
+	std::cout << str.size() << std::endl;
+	if (vec[y][x] == 1 && y == Y && x == X){
+		flag = 1;
+		return;
+	}
+	if (vec[y][x] == 1 || flag == 1)
+		return;
+	vec[y][x] = 1;
+	//wayの向き:下から来た場合は1、つまり前の動作は下向きのとき
+	//上
+	if (way == 3 || way == 1){
+		if (y > 0 && map[y - 1][x] == 0)
+			search(y - 1, x, vec, 4);
+		else
+			str.push_back(4);
+	}
+	//右
+	if (way != 4){
+		if (x < 31 && map[y][x + 1] == 0)
+			search(y, x + 1, vec, 3);
+		else
+			str.push_back(3);
+	}
+	//下
+	if (y < 31 && map[y + 1][x] == 0)
+		search(y + 1, x, vec, 1);
+	else
+		str.push_back(1);
+	//左
+	if (x > 0 && map[y][x - 1] == 0)
+		search(y, x - 1, vec, 2);
+	else
+		str.push_back(2);
+
+	//左、下から来た場合の上の判定のタイミング
+	if (way == 4 || way == 2){
+		if (y > 0 && map[y - 1][x] == 0)
+			search(y - 1, x, vec, 4);
+		else
+			str.push_back(4);
+	}
+	if (way == 4){
+		if (x < 31 && map[y][x + 1] != 0)
+			search(y, x + 1, vec, 3);
+		else
+			str.push_back(3);
+	}
 }

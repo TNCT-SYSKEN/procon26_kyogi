@@ -68,7 +68,7 @@ void screen_v(std::vector<std::vector<int> > v){
 
 void input_sum(int& sum){
 	//ファイル入力ストリームの初期化
-	std::ifstream ifs("Debug/quest9.txt");
+	std::ifstream ifs("Debug/quest2.txt");
 	std::string line;
 	//1ファイルの中身を一行ずつ追加
 	while (getline(ifs, line)){
@@ -80,7 +80,7 @@ void input_sum(int& sum){
 
 void input(Map& map1, std::vector<Piece>& piece, int sum){
 	//ファイル入力ストリームの初期化
-	std::ifstream ifs("Debug/quest9.txt");
+	std::ifstream ifs("Debug/quest2.txt");
 	std::string line;
 	std::vector<std::vector<int> > map(32, std::vector<int>(32));
 	piece.resize(sum);
