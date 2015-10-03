@@ -19,14 +19,14 @@ void search_place(std::vector<std::vector<int> > v, std::vector<std::vector<std:
 			if (v[i][j] == 3){
 
 			}
-				/*for (int k = i - 5; k < (i+5); k++){
-					for (int s = j - 5; s < (j + 5); s++)
-						if (k >= 0 && s >= 0 && k < 32 && s < 32)
-							if (v[k][s] == -1)
-								std::cout << "*";
-							else
-								std::cout << v[k][s];
-						std::cout << std::endl;
+			/*for (int k = i - 5; k < (i+5); k++){
+				for (int s = j - 5; s < (j + 5); s++)
+				if (k >= 0 && s >= 0 && k < 32 && s < 32)
+				if (v[k][s] == -1)
+				std::cout << "*";
+				else
+				std::cout << v[k][s];
+				std::cout << std::endl;
 				}*/
 		}
 		std::cout << std::endl;
@@ -56,8 +56,8 @@ void screen(std::vector<std::vector<int> > map){
 }
 
 void screen_v(std::vector<std::vector<int> > v){
-	for (int i = 0; i < 32; i++){
-		for (int j = 0; j < 32; j++)
+	for (int i = 0; i < 34; i++){
+		for (int j = 0; j < 34; j++)
 			if (v[i][j] == -1)
 				std::cout << "*";
 			else
@@ -82,7 +82,7 @@ void input(Map& map1, std::vector<Piece>& piece, int sum){
 	//ファイル入力ストリームの初期化
 	std::ifstream ifs("Debug/quest2.txt");
 	std::string line;
-	std::vector<std::vector<int> > map(32, std::vector<int>(32));
+	std::vector<std::vector<int> > map(34, std::vector<int>(34));
 	piece.resize(sum);
 	for (int i = 0; i < sum; i++) {
 		piece[i].parts.resize(8);
@@ -90,12 +90,19 @@ void input(Map& map1, std::vector<Piece>& piece, int sum){
 			piece[i].parts[j].resize(8);
 		}
 	}
-	int N = 0, t = 0;
+	for (int i = 0; i < 34; i++){
+		map[0][i] = 1;
+		map[33][i] = 1;
+	}
+	int N = 0, t = 1;
 	//1ファイルの中身を一行ずつ追加
 	while (getline(ifs, line)){
 		if (line.size() == 32){
-			for (int i = 0; i < 32; i++)
-				map[t][i] = (int)line[i] - (int)'0';
+			for (int i = 0; i < 34; i++)
+				if (i == 0 || i == 33)
+					map[t][i] = 1;
+				else
+					map[t][i] = (int)line[i -1] - (int)'0';
 			t++;
 		}
 		else if (line.size() == 8){

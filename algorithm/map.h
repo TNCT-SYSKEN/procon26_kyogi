@@ -29,7 +29,7 @@ public:
 	void updata_v();
 
 	//•¶Žš—ñ‰»—p, ˆê”ÔŠO‘¤‚à
-	void search(int, int, int [][32], int);
+	void search(int, int, int [][34], int);
 
 	/*•~‚¢‚Ä‚¢‚­—p*/
 	//•~‚­‚±‚Æ‚ª‚Å‚«‚ê‚Î•~‚­

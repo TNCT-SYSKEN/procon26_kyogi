@@ -59,16 +59,19 @@ bool Map::already(){
 }
 
 void Map::set(std::vector<std::vector<int> > Map){
-	map.resize(32);
-	for (int i = 0; i < 32; i++)
-		map[i].resize(32);
-	v.resize(32);
-	for (int i = 0; i < 32; i++)
-		v[i].resize(32);
+	map.resize(34);
+	for (int i = 0; i < 34; i++)
+		map[i].resize(34);
+	v.resize(34);
+	for (int i = 0; i < 34; i++)
+		v[i].resize(34);
 
-	for (int i = 0; i < 32; i++)
-		for (int j = 0; j < 32; j++)
+	for (int i = 0; i < 34; i++)
+		for (int j = 0; j < 34; j++){
+			if (i == 0 || j == 0 || i == 33 || j == 33)
+				v[i][j] = 1;
 			map[i][j] = Map[i][j];
+		}
 	updata_v();
 }
 
@@ -76,8 +79,8 @@ void Map::updata_v(){
 	int x[4] = { -1, 0, 1, 0 };
 	int y[4] = { 0, 1, 0, -1 };
 
-	for (int i = 0; i < 32; i++){
-		for (int j = 0; j < 32; j++){
+	for (int i = 0; i < 34; i++){
+		for (int j = 0; j < 34; j++){
 			int sum = 0;
 			if (map[i][j] == 1){
 				v[i][j] = -1;
@@ -86,79 +89,87 @@ void Map::updata_v(){
 			for (int k = 0; k < 4; k++){
 				int X = j + x[k];
 				int Y = i + y[k];
-				if (Y < 0 || Y > 31 || X < 0 || X > 31 || map[Y][X] == 1)
+				if (map[Y][X] == 1)
 					sum++;
 			}
 			v[i][j] = sum;
 		}
 	}
+	for (int i = 0; i < 34; i++){
+		for (int j = 0; j < 34; j++)
+			std::cout << map[i][j];
+		std::cout << std::endl;
+	}
 
 	//まわりを文字列化
 	flag = 0;
-	int vec[32][32] = { 0 };
-	int data[32][32];
+	//再帰処理のための変数
+	int vec[34][34] = { 0 };
+	/*int data[32][32];
 	for (int i = 0; i < 32; i++)
-		for (int j = 0; j < 32; j++)
-			data[i][j] = map[i][j];
-	for (int YY = 0; YY < 32; YY++){
-		for (int XX = 0; XX < 32; XX++)
+	for (int j = 0; j < 32; j++)
+	data[i][j] = map[i][j];*/
+	for (int YY = 1; YY <= 32; YY++){
+		for (int XX = 1; XX <= 32; XX++)
 			if (map[YY][XX] == 0){
-				Y = YY;
+				Y = YY - 1;
 				X = XX;
-				search(Y, X, vec, 1);
+				search(Y, X, vec, 3);
 				break;
 			}
-		if (v[Y][X] == 0)
+		if (map[Y + 1][X] == 0)
 			break;
 	}
 }
 
-void Map::search(int y, int x, int vec[][32], int way){
+/*
+1
+3□2
+4
+*/
+void Map::search(int y, int x, int vec[][34], int way){
+	if (vec[y][x] == 1)
+		return;
 	std::cout << str.size() << std::endl;
-	if (vec[y][x] == 1 && y == Y && x == X){
-		flag = 1;
-		return;
-	}
-	if (vec[y][x] == 1 || flag == 1)
-		return;
+	std::cout << y << " " << x << std::endl;
 	vec[y][x] = 1;
-	//wayの向き:下から来た場合は1、つまり前の動作は下向きのとき
-	//上
-	if (way == 3 || way == 1){
-		if (y > 0 && map[y - 1][x] == 0)
-			search(y - 1, x, vec, 4);
-		else
+	//下
+	if (way == 3 || way == 4){
+		if (y < 33 && map[y + 1][x] != 0)
+			search(y + 1, x, vec, 1);
+		else if (y < 33 && map[y + 1][x] == 0)
 			str.push_back(4);
 	}
 	//右
-	if (way != 4){
-		if (x < 31 && map[y][x + 1] == 0)
+	if (way != 1){
+		if (x < 33 && map[y][x + 1] != 0)
 			search(y, x + 1, vec, 3);
-		else
-			str.push_back(3);
+		else if (x < 33 && map[y][x + 1] == 0)
+			str.push_back(2);
 	}
-	//下
-	if (y < 31 && map[y + 1][x] == 0)
-		search(y + 1, x, vec, 1);
-	else
+	//上
+	if (y > 0 && map[y - 1][x] != 0)
+		search(y - 1, x, vec, 4);
+	else if (y > 0 && map[y - 1][x] == 0)
 		str.push_back(1);
 	//左
-	if (x > 0 && map[y][x - 1] == 0)
+	if (x > 0 && map[y][x - 1] != 0)
 		search(y, x - 1, vec, 2);
-	else
-		str.push_back(2);
+	else if (x > 0 && map[y][x - 1] == 0)
+		str.push_back(3);
+	
 
 	//左、下から来た場合の上の判定のタイミング
-	if (way == 4 || way == 2){
-		if (y > 0 && map[y - 1][x] == 0)
-			search(y - 1, x, vec, 4);
-		else
+	if (way == 1 || way == 2){
+		if (y < 33 && map[y + 1][x] != 0)
+			search(y + 1, x, vec, 1);
+		else if (y < 33 && map[y + 1][x] == 0)
 			str.push_back(4);
 	}
-	if (way == 4){
-		if (x < 31 && map[y][x + 1] != 0)
+	if (way == 1){
+		if (x < 33 && map[y][x + 1] != 0)
 			search(y, x + 1, vec, 3);
-		else
-			str.push_back(3);
+		else if (x < 33 && map[y][x + 1] == 0)
+			str.push_back(2);
 	}
 }
