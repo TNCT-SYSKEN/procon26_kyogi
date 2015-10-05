@@ -9,28 +9,24 @@
 #include "map"
 #include "piece.h"
 
-void put(Piece& piece){
+void put(Piece& piece, Map& map){
+	int y, x;
+	for (int i = 0; i < 8; i++){
+		piece.routen(i);
+		//ˆê’v‰ÓŠ‚ð’T‚µA•Ô‚·
+		search_place(map, piece, y , x);
+		//•~‚¯‚½‚ç•~‚­
+		if (check(map, piece, y, x))
+			break;
+	}
+}
+
+bool check(Map& map, Piece& piece, int& y, int& x){
 
 }
 
-void search_place(std::vector<std::vector<int> > v, std::vector<std::vector<std::vector<int> >>& place){
-	for (int i = 0; i < 32; i++){
-		for (int j = 0; j < 32; j++){
-			if (v[i][j] == 3){
+void search_place(Map& map, Piece& piece){
 
-			}
-			/*for (int k = i - 5; k < (i+5); k++){
-				for (int s = j - 5; s < (j + 5); s++)
-				if (k >= 0 && s >= 0 && k < 32 && s < 32)
-				if (v[k][s] == -1)
-				std::cout << "*";
-				else
-				std::cout << v[k][s];
-				std::cout << std::endl;
-				}*/
-		}
-		std::cout << std::endl;
-	}
 }
 
 void screen(std::vector<std::vector<int> > map){
@@ -102,7 +98,7 @@ void input(Map& map1, std::vector<Piece>& piece, int sum){
 				if (i == 0 || i == 33)
 					map[t][i] = 1;
 				else
-					map[t][i] = (int)line[i -1] - (int)'0';
+					map[t][i] = (int)line[i - 1] - (int)'0';
 			t++;
 		}
 		else if (line.size() == 8){

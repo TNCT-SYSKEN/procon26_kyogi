@@ -114,20 +114,33 @@ void Map::updata_v(){
 			if (map[YY][XX] == 0){
 				Y = YY - 1;
 				X = XX;
-				search(Y, X, vec, 3);
+				if (num == 0)
+					search_first(Y, X, vec, 3);
+				else{
+					if (map[Y][X] < 2)
+						continue;
+					else if (map[Y + 1][X - 1] >= 2){
+						Y++;
+						X--;
+						search(Y, X, vec, 4);
+					}
+				}
+				flag = 1;
 				break;
 			}
-		if (map[Y + 1][X] == 0)
+		if (flag == 1)
 			break;
 	}
+	for (int i = 0; i < (int)str.size(); i++)
+		std::cout << str[i];
 }
 
 /*
-1
-3□2
-4
+ 4
+2□3
+ 1
 */
-void Map::search(int y, int x, int vec[][34], int way){
+void Map::search_first(int y, int x, int vec[][34], int way){
 	if (vec[y][x] == 1)
 		return;
 	std::cout << str.size() << std::endl;
@@ -138,38 +151,86 @@ void Map::search(int y, int x, int vec[][34], int way){
 		if (y < 33 && map[y + 1][x] != 0)
 			search(y + 1, x, vec, 1);
 		else if (y < 33 && map[y + 1][x] == 0)
-			str.push_back(4);
+			str.push_back(1);
 	}
 	//右
 	if (way != 1){
 		if (x < 33 && map[y][x + 1] != 0)
 			search(y, x + 1, vec, 3);
 		else if (x < 33 && map[y][x + 1] == 0)
-			str.push_back(2);
+			str.push_back(3);
 	}
 	//上
 	if (y > 0 && map[y - 1][x] != 0)
 		search(y - 1, x, vec, 4);
 	else if (y > 0 && map[y - 1][x] == 0)
-		str.push_back(1);
+		str.push_back(4);
 	//左
 	if (x > 0 && map[y][x - 1] != 0)
 		search(y, x - 1, vec, 2);
 	else if (x > 0 && map[y][x - 1] == 0)
-		str.push_back(3);
-	
+		str.push_back(2);
+
 
 	//左、下から来た場合の上の判定のタイミング
 	if (way == 1 || way == 2){
 		if (y < 33 && map[y + 1][x] != 0)
 			search(y + 1, x, vec, 1);
 		else if (y < 33 && map[y + 1][x] == 0)
-			str.push_back(4);
+			str.push_back(1);
 	}
 	if (way == 1){
 		if (x < 33 && map[y][x + 1] != 0)
 			search(y, x + 1, vec, 3);
 		else if (x < 33 && map[y][x + 1] == 0)
-			str.push_back(2);
+			str.push_back(3);
+	}
+}
+
+
+void Map::search(int y, int x, int vec[][34], int way){
+	if (vec[y][x] == 1)
+		return;
+	std::cout << str.size() << std::endl;
+	std::cout << y << " " << x << std::endl;
+	vec[y][x] = 1;
+	//下
+	if (way == 3 || way == 4){
+		if (y < 33 && map[y + 1][x] >= 2)
+			search(y + 1, x, vec, 1);
+		else if (y < 33 && map[y + 1][x] == 0)
+			str.push_back(1);
+	}
+	//右
+	if (way != 1){
+		if (x < 33 && map[y][x + 1] >= 2)
+			search(y, x + 1, vec, 3);
+		else if (x < 33 && map[y][x + 1] == 0)
+			str.push_back(3);
+	}
+	//上
+	if (y > 0 && map[y - 1][x] >= 2)
+		search(y - 1, x, vec, 4);
+	else if (y > 0 && map[y - 1][x] == 0)
+		str.push_back(4);
+	//左
+	if (x > 0 && map[y][x - 1] >= 2)
+		search(y, x - 1, vec, 2);
+	else if (x > 0 && map[y][x - 1] == 0)
+		str.push_back(2);
+	
+
+	//左、下から来た場合の上の判定のタイミング
+	if (way == 1 || way == 2){
+		if (y < 33 && map[y + 1][x] >= 2)
+			search(y + 1, x, vec, 1);
+		else if (y < 33 && map[y + 1][x] == 0)
+			str.push_back(1);
+	}
+	if (way == 1){
+		if (x < 33 && map[y][x + 1] >= 2)
+			search(y, x + 1, vec, 3);
+		else if (x < 33 && map[y][x + 1] == 0)
+			str.push_back(3);
 	}
 }

@@ -15,6 +15,8 @@ private:
 	int way;
 	//search脱出用のフラグ
 	int flag;
+	//何個目か
+	int num;
 public:
 	//周囲の文字列
 	std::vector<int> str;
@@ -29,6 +31,7 @@ public:
 	void updata_v();
 
 	//文字列化用, 一番外側も
+	void search_first(int, int, int [][34], int);
 	void search(int, int, int [][34], int);
 
 	/*敷いていく用*/

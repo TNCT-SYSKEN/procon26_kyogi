@@ -35,10 +35,10 @@ int main(){
 		
 
 	//とりあえず、ピースを順番にはめれたらはめる、無理だったらパスを繰り返す
-	/*while (num < sum){
-		put(piece[num]);
+	while (num < sum){
+		put(piece[num], map);
 		num++;
-	}*/
+	}
 
 	/*for (int k = 0; k < sum; k++){
 		for (int i = 0; i < 8; i++){
