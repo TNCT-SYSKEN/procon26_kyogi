@@ -7,8 +7,6 @@
 
 class Map{
 private:
-  //マップデータ
-	std::vector<std::vector<int> > map;
 	//すでに敷いてるピースの隣接している空マスのアドレスを格納
 	std::vector<std::pair<int,int> > adress;
 	//向き
@@ -18,6 +16,8 @@ private:
 	//何個目か
 	int num;
 public:
+  //マップデータ
+	std::vector<std::vector<int> > map;
 	//周囲の文字列
 	std::vector<int> str;
 	//文字列の始点の座標

@@ -10,22 +10,89 @@
 #include "piece.h"
 
 void put(Piece& piece, Map& map){
+	//map‚Ìy xApiece‚Ìy x ˆê’v” routen
+	std::vector<std::vector<int> > v(4, std::vector<int>(6));
+	//•~‚­êŠ‚ğ’T‚·
 	int y, x;
-	for (int i = 0; i < 8; i++){
-		piece.routen(i);
-		//ˆê’v‰ÓŠ‚ğ’T‚µA•Ô‚·
-		search_place(map, piece, y , x);
-		//•~‚¯‚½‚ç•~‚­
-		if (check(map, piece, y, x))
-			break;
+	std::vector<int>::iterator ite;
+	for (int k = 0; k < 8; k++){
+		piece.routen(k);
+		for (int i = 0; i < (int)piece.str.size(); i++){
+			ite = find(map.str.begin(), map.str.end(), piece.str[i]);
+			while (ite != map.str.end()){
+				int t = 1;
+				while (1){
+					int map_ite = ite - map.str.begin() + t;
+					int piece_ite = i + t;
+					if (map_ite < map.str.size() && piece_ite > piece.str.size() && map.str[map_ite] == piece.str[piece_ite]){
+						t++;
+					}
+					else{
+						if (v[0][4] < t){
+							for (int j = 0; j < 6; j++)
+								v[1][i] = v[0][i];
+							v[0][4] = t;
+							v[0][5] = k;
+							search_adress(map, piece, v);
+						}
+						else if (v[1][4] < t){
+							v[0][4] = t;
+							v[0][5] = k;
+							search_adress(map, piece, v);
+						}
+						break;
+					}
+				}
+				ite = find(map.str.begin(), map.str.end(), piece.str[i]);
+			}
+		}
 	}
+
+
+
+	//•~‚¯‚é‚©”»’è
+	for (int i = 0; i < (int)v.size(); i++)
+		if (check(map, piece, v))
+			break;
 }
 
-bool check(Map& map, Piece& piece, int& y, int& x){
-
+bool check(Map& map, Piece& piece, std::vector<std::vector<int> > v){
+	int flag = 0;
+	for (int k = 0; k < 2; k++){
+		for (int i = 0; i < 8; i++){
+			for (int j = 0; j < 8; j++){
+				if (piece.parts[i][j] >= 1){
+					int y = i + v[k][0] + v[k][2];
+					int x = j + v[k][1] + v[k][3];
+					if (y < 0 || x < 0 || y >= 8 || x >= 8 || map.map[y][x] == 1){
+						flag += k + 1;
+						if (flag == 3)
+							return false;
+						break;
+					}
+				}
+			}
+			if (flag == 1)
+				break;
+		}
+	}
+	for (int k = 0; k < 2; k++){
+		for (int i = 0; i < 8; i++){
+			for (int j = 0; j < 8; j++){
+				if (piece.parts[i][j] >= 1){
+					int y = i + v[k][0] + v[k][2];
+					int x = j + v[k][1] + v[k][3];
+					if (flag == 1 + k){
+						map.map[i][j] = piece.parts[i][j];
+					}
+				}
+			}
+		}
+	}
+	return true;
 }
 
-void search_place(Map& map, Piece& piece){
+void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v){
 
 }
 
