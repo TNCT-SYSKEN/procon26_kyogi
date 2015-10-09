@@ -6,7 +6,6 @@
 #include<vector>
 #include<algorithm>
 #include<Windows.h>
-#include<time.h>
 #include"algorithm.h"
 using namespace std;
 
@@ -15,14 +14,10 @@ int main(void){
 
 	p.input_file();
 
-	p.init_board();
-	//‘S‰ð
-	p.try_piece(0);
-	//ˆê‚Â
-	//p.try_once_piece(0);
+	p.try_first_piece(0);
 
-	p.consolout();
-	p.clock_out();
+	//p.consolout();
+	cout << "finish" << endl;
 	Sleep(10000000);
 
 	return 0;
