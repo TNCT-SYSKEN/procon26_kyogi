@@ -37,8 +37,8 @@ namespace procon26_kyogi
         int[] used = new int[256];
 
         //ピースの提出データ
-        /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか 5:スキップしたか判定*/
-        int[,] data = new int[256, 6];
+        /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
+        int[,] data = new int[256, 5];
         //ピース
         int[, ,] item = new int[256, 8, 8];
 
@@ -343,7 +343,6 @@ namespace procon26_kyogi
                         if (map[i, j] == count + 1)
                             map[i, j] = 0;
                 count--;
-                data[count, 5]--;
                 if (sum > 0 && count == data[sum - 1, 4])
                 {
                     data[sum - 1, 4] = -1;
@@ -358,7 +357,6 @@ namespace procon26_kyogi
         {
             if (count < pieces)
             {
-                data[sum, 5]++;
                 count++;
             }
         }
@@ -587,27 +585,43 @@ namespace procon26_kyogi
                 FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 StreamWriter sw = new StreamWriter(fs);
 
+                int datastorage = 0;
+
+                while (0 < data[0, 4]) //冒頭のスキップの処理が後述のwhile文だと上手くいかなかったのでこの文を追加
+                {
+                    textBox4.Text += ("\r\n");
+                    data[0, 4]--;
+                    datastorage++;
+                }
+                data[0, 4] += datastorage;
+
                 for (int ij = 0; ij < pieces; ij++)
                 {
+                    datastorage = 0;
                     if (data[ij, 4] != -1)  //ピースが当てはめられていたら
                     {
-                        while (0 < data[ij, 5])
+                        if (0 < ij)
                         {
-                            textBox4.Text += (ij + "skip改行\r\n");
-                            data[ij, 5]--;
+                            while (data[ij - 1, 4] + 1 < data[ij, 4])  //石番号でスキップ回数を判断
+                            {
+                                textBox4.Text += ("\r\n");
+                                data[ij, 4]--;
+                                datastorage++;
+                            }
+                            data[ij, 4] += datastorage;
                         }
-                        for (int j = 0; j < 5; j++)   //テスト用に石番号も表示、本来はj<4
+                        for (int j = 0; j < 4; j++)   //テスト用に石番号も表示にはj<5、本来はj<4
                         {
                             if (j != 2)
                             {
                                 textBox4.Text += data[ij, j];
-                                if (j != 4)//j!=3
+                                if (j != 3)//j!=3
                                 {
-                                    textBox4.Text += string.Format("空白 ");
+                                    textBox4.Text += string.Format(" ");
                                 }
-                                else if (j == 4)//j==3
+                                else if (j == 3)//j==3
                                 {
-                                    textBox4.Text += ("通常改行\r\n");
+                                    textBox4.Text += ("\r\n");
                                 }
                             }
                             else if (j == 2)
@@ -615,12 +629,12 @@ namespace procon26_kyogi
                                 if (data[ij, 2] == 0)
                                 {
                                     textBox4.Text += ("H");
-                                    textBox4.Text += string.Format("2空白 ");
+                                    textBox4.Text += string.Format(" ");
                                 }
                                 else if (data[ij, 2] == 1)
                                 {
                                     textBox4.Text += ("T");
-                                    textBox4.Text += string.Format("2空白 ");
+                                    textBox4.Text += string.Format(" ");
                                 }
                             }
 
@@ -834,16 +848,7 @@ namespace procon26_kyogi
             }
         }
 
-
-
         //文字コードはASCIIコード、改行コードはCR+LF
-
-        /*
-          現在の問題
-          以下の条件下でスキップ回数が正しくマイナスされなくなる
-          ・スキップを二回以上してから二回以上戻った際
-          ・ピースを置いてからそのピースを置いてない状態まで戻し、再度置くなどする
-        */
 
     }
 }
