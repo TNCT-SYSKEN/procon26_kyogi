@@ -675,6 +675,102 @@ namespace procon26_kyogi
         private void tabPage3_Click(object sender, EventArgs e)
         {
         }
+        
+        //出力ファイルの読み込み
+        private void button12_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = openFileDialog1.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                //ファイル名をtextBox1に出力
+                textBox1.Text = openFileDialog1.FileName;
+            }
+
+            //テキスト内容をtextBox3に出力
+            FileStream fs = new FileStream(openFileDialog1.FileName, FileMode.Open);
+            StreamReader sr = new StreamReader(fs);
+
+            string text = sr.ReadToEnd();
+            textBox3.Text = text;
+            System.Text.Encoding.GetEncoding("us-ascii");
+            System.IO.StringReader rs = new System.IO.StringReader(text);
+
+            int mapx = 0, mapy = 0; //マップのx,y座標
+            int num = 0, stnx = 0, stny = 0; //石の番号,x,y座標
+            //読み込みできる文字がなくなるまで繰り返す
+            int i = 0;
+            while (rs.Peek() > -1)
+            {
+                /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
+                string t = rs.ReadLine();
+                if (t.Length == 0)     //改行
+                {
+                  data[i, 4] = -1;
+                }
+                else if (t.Length == 8)  //書き込み
+                {
+
+                }
+                i++;
+            }
+            sr.Close();
+            fs.Close();
+            rs.Close();
+
+            for (num = 0; num < pieces; num++)
+            {
+                if (data[num, 4] == num)
+                {
+                    //データ格納
+                    //回転
+                    if (data[num, 2] == 1)
+                    {
+                        int[,] aaa = new int[8, 4];
+                        //左半分と右半分を入れ替える
+                        for (i = 0; i < 8; i++)
+                            for (int j = 0; j < 4; j++)
+                                aaa[i, j] = item[num, i, j];
+                        for (i = 0; i < 8; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, i, j] = item[num, i, 7 - j];
+                        for (i = 0; i < 8; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, i, 7 - j] = aaa[i, j];
+                    }
+                }
+                if (data[num, 3] != 0)
+                {
+                    int kaiten = data[num, 3] / 90;
+                    for (int k = 0; k < kaiten; k++)
+                    {
+                        int[,] aaa = new int[4, 4];
+                        //4分割して入れ替える
+                        for (i = 0; i < 4; i++)
+                            for (int j = 0; j < 4; j++)
+                                aaa[i, j] = item[num, i, j];
+                        for (i = 0; i < 4; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, i, j] = item[num, 7 - j, i];
+                        for (i = 0; i < 4; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, 7 - j, i] = item[num, 7 - i, 7 - j];
+                        for (i = 0; i < 4; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, 7 - i, 7 - j] = item[num, j, 7 - i];
+                        for (i = 0; i < 4; i++)
+                            for (int j = 0; j < 4; j++)
+                                item[num, j, 7 - i] = aaa[i, j];
+                    }
+                }
+                for (i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        map[data[num, 0] + i, data[num, 1] + j] = item[num, i, j];
+                    }
+                }
+            }
+        }
 
         private void make_pair_button_Click(object sender, EventArgs e)
         {
