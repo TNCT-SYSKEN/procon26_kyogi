@@ -795,8 +795,8 @@ namespace procon26_kyogi
                     {
                         for (int j = 0; j < 8; j++)
                         {
-                            if(item[data[sum_used, 4], i, j] == 1)
-                            map[data[sum_used, 0] + j, data[sum_used, 1] + i] = sum_used + 2;
+                            if(item[data[sum_used, 4], j, i] == 1)
+                            map[data[sum_used, 1] + j, data[sum_used, 0] + i] = sum_used + 2;
                         }
                     }
                 }
