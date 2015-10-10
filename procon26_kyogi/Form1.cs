@@ -702,14 +702,43 @@ namespace procon26_kyogi
             while (rs.Peek() > -1)
             {
                 /*0:y 1:x 2:(0:H/1:T) 3:angle 4:何個目のピースか*/
+                int adr = 0;
                 string t = rs.ReadLine();
                 if (t.Length == 0)     //改行
                 {
                   data[i, 4] = -1;
                 }
-                else if (t.Length == 8)  //書き込み
+                else  //書き込み
                 {
-
+                    //ここはx, yの順でとる
+                    for (int time = 0; time < 4; time++)
+                    {
+                        string str = "";
+                        while (adr != t.Length && t[adr] != ' ')
+                        {
+                            str += t[adr].ToString();
+                            adr++;
+                        }
+                        if (adr != t.Length)
+                        {
+                            if (t[adr] == ' ' || t[adr] == '\n')
+                            {
+                                adr++;
+                            }
+                        }
+                        if (time != 2)
+                        {
+                            data[i, time] = int.Parse(str);
+                        }
+                        else
+                        {
+                            if (str == "H")
+                                data[i, time] = 0;
+                            else
+                                data[i, time] = 1;
+                        }
+                    }
+                    data[i, 4] = i;
                 }
                 i++;
             }
@@ -717,58 +746,61 @@ namespace procon26_kyogi
             fs.Close();
             rs.Close();
 
+            int sum_used = 0;
             for (num = 0; num < pieces; num++)
             {
-                if (data[num, 4] == num)
+                if (data[sum_used, 4] == num)
                 {
                     //データ格納
                     //回転
-                    if (data[num, 2] == 1)
+                    if (data[sum_used, 2] == 1)
                     {
                         int[,] aaa = new int[8, 4];
                         //左半分と右半分を入れ替える
                         for (i = 0; i < 8; i++)
                             for (int j = 0; j < 4; j++)
-                                aaa[i, j] = item[num, i, j];
+                                aaa[i, j] = item[sum_used, i, j];
                         for (i = 0; i < 8; i++)
                             for (int j = 0; j < 4; j++)
-                                item[num, i, j] = item[num, i, 7 - j];
+                                item[sum_used, i, j] = item[sum_used, i, 7 - j];
                         for (i = 0; i < 8; i++)
                             for (int j = 0; j < 4; j++)
-                                item[num, i, 7 - j] = aaa[i, j];
+                                item[sum_used, i, 7 - j] = aaa[i, j];
                     }
-                }
-                if (data[num, 3] != 0)
-                {
-                    int kaiten = data[num, 3] / 90;
-                    for (int k = 0; k < kaiten; k++)
+                    if (data[sum_used, 3] != 0)
                     {
-                        int[,] aaa = new int[4, 4];
-                        //4分割して入れ替える
-                        for (i = 0; i < 4; i++)
-                            for (int j = 0; j < 4; j++)
-                                aaa[i, j] = item[num, i, j];
-                        for (i = 0; i < 4; i++)
-                            for (int j = 0; j < 4; j++)
-                                item[num, i, j] = item[num, 7 - j, i];
-                        for (i = 0; i < 4; i++)
-                            for (int j = 0; j < 4; j++)
-                                item[num, 7 - j, i] = item[num, 7 - i, 7 - j];
-                        for (i = 0; i < 4; i++)
-                            for (int j = 0; j < 4; j++)
-                                item[num, 7 - i, 7 - j] = item[num, j, 7 - i];
-                        for (i = 0; i < 4; i++)
-                            for (int j = 0; j < 4; j++)
-                                item[num, j, 7 - i] = aaa[i, j];
+                        int kaiten = data[sum_used, 3] / 90;
+                        for (int k = 0; k < kaiten; k++)
+                        {
+                            int[,] aaa = new int[4, 4];
+                            //4分割して入れ替える
+                            for (i = 0; i < 4; i++)
+                                for (int j = 0; j < 4; j++)
+                                    aaa[i, j] = item[sum_used, i, j];
+                            for (i = 0; i < 4; i++)
+                                for (int j = 0; j < 4; j++)
+                                    item[sum_used, i, j] = item[sum_used, 7 - j, i];
+                            for (i = 0; i < 4; i++)
+                                for (int j = 0; j < 4; j++)
+                                    item[sum_used, 7 - j, i] = item[sum_used, 7 - i, 7 - j];
+                            for (i = 0; i < 4; i++)
+                                for (int j = 0; j < 4; j++)
+                                    item[sum_used, 7 - i, 7 - j] = item[sum_used, j, 7 - i];
+                            for (i = 0; i < 4; i++)
+                                for (int j = 0; j < 4; j++)
+                                    item[sum_used, j, 7 - i] = aaa[i, j];
+                        }
                     }
-                }
-                for (i = 0; i < 8; i++)
-                {
-                    for (int j = 0; j < 8; j++)
+                    for (i = 0; i < 8; i++)
                     {
-                        map[data[num, 0] + i, data[num, 1] + j] = item[num, i, j];
+                        for (int j = 0; j < 8; j++)
+                        {
+                            if(item[data[sum_used, 4], i, j] == 1)
+                            map[data[sum_used, 0] + j, data[sum_used, 1] + i] = sum_used + 2;
+                        }
                     }
                 }
+                sum_used++;
             }
         }
 
