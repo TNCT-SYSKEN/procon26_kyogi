@@ -33,12 +33,12 @@ void put(Piece& piece, Map& map){
 								v[1][i] = v[0][i];
 							v[0][4] = t;
 							v[0][5] = k;
-							search_adress(map, piece, v, ite);
+							search_adress(map, piece, v, 0, ite, i);
 						}
 						else if (v[1][4] < t){
 							v[0][4] = t;
 							v[0][5] = k;
-							search_adress(map, piece, v, ite);
+							search_adress(map, piece, v, 1, ite, i);
 						}
 						break;
 					}
@@ -90,14 +90,14 @@ bool check(Map& map, Piece& piece, std::vector<std::vector<int> > v){
 	return true;
 }
 
-void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v, std::vector<int>::iterator ite){
-	int begin_match = ite - map.str.begin();
+void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v, int rank, std::vector<int>::iterator ite, int piece_begin_match){
+	int map_begin_match = ite - map.str.begin();
 	int y = map.Y;
 	int x = map.X;
 	int old, now;
-	for (int i = 1; i < begin_match; i++){
-		old = map.str[i + begin_match - 1];
-		now = map.str[i + begin_match];
+	for (int i = 1; i < map_begin_match; i++){
+		old = map.str[i + map_begin_match - 1];
+		now = map.str[i + map_begin_match];
 		//一直線
 		if (old == now){
 			if (now == 1)
@@ -127,6 +127,53 @@ void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v, std
 		}
 		//凹は変わらないのでなし
 	}
+	v[rank][0] = y;
+	v[rank][1] = x;
+
+	//ピースのアドレスを取得
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			if (piece.parts[i][j] != 0){
+				x = j;
+				y = i;
+				break;
+			}
+		}
+		if (piece.parts[y][x] != 0)
+			break;
+	}
+	for (int i = 0; i < piece_begin_match; i++){
+		//一直線
+		if (old == now){
+			if (now == 1)
+				x++;
+			else if (now == 2)
+				y--;
+			else if (now == 3)
+				y++;
+			else
+				x--;
+		}//凸
+		else if (old == 2 && now == 1){
+			y--;
+			x--;
+		}
+		else if (old == 1 && now == 3){
+			y++;
+			x--;
+		}
+		else if (old == 3 && now == 4){
+			y++;
+			x++;
+		}
+		else if (old == 4 && now == 2){
+			y--;
+			x++;
+		}
+		//凹は変わらないのでなし
+	}
+	v[rank][3] = y;
+	v[rank][4] = x;
 }
 
 void screen(std::vector<std::vector<int> > map){
