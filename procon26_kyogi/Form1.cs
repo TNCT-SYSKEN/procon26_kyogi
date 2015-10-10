@@ -287,8 +287,20 @@ namespace procon26_kyogi
             else
                 g.DrawString("T", fnt, Brushes.Blue, 890, 210);
 
-            //リソースを解放する
-            g.Dispose();
+            //空きますを数える
+            int sum_null = 0;
+            for (int i = 0; i < 32; i++)
+            {
+                for (int j = 0; j < 32; j++)
+                {
+                    if (map[i, j] == 0)
+                        sum_null++;
+                }
+            }
+            g.DrawString(sum_null.ToString("D"), fnt, Brushes.Blue, 950, 210);
+
+                //リソースを解放する
+                g.Dispose();
             //PictureBox1に表示する
             pictureBox2.Image = canvas;
 
@@ -732,8 +744,7 @@ namespace procon26_kyogi
             System.Text.Encoding.GetEncoding("us-ascii");
             System.IO.StringReader rs = new System.IO.StringReader(text);
 
-            int mapx = 0, mapy = 0; //マップのx,y座標
-            int num = 0, stnx = 0, stny = 0; //石の番号,x,y座標
+            int num = 0;
             //読み込みできる文字がなくなるまで繰り返す
             int i = 0;
             while (rs.Peek() > -1)
