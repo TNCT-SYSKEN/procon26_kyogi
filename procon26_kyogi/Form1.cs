@@ -30,7 +30,7 @@ namespace procon26_kyogi
 
         //Fontを作成
         Font fnt = new Font("ＭＳ ゴシック", 12);
-        int[,] map = new int[32, 32];
+        int[,] map = new int[33, 33];
         //現在配置されているピースの総数
         int sum = 0;
         //使われたピース番号
@@ -86,16 +86,16 @@ namespace procon26_kyogi
                 {
                     //block
                     if (map[i, j] == 1)
-                        g.FillRectangle(Brushes.Black, (400 + j * width), 0 + i * length, 1 + width, 1 + length);
+                        g.FillRectangle(Brushes.Black, (500 + j * width), 15 + i * length, 1 + width, 1 + length);
                     else if (map[i, j] >= 2)
-                        g.FillRectangle(Brushes.Aqua, (400 + j * width) + 1, 0 + i * length + 1, width, length);
+                        g.FillRectangle(Brushes.Aqua, (500 + j * width) + 1, 15 + i * length + 1, width, length);
                 }
             }
             for (int i = 0; i <= MAP; i++)
             {
                 //(x, y)-(x, y)に、幅1の黒い線を引く
-                g.DrawLine(Pens.Black, (400), 0 + i * length, (400 + 32 * width), 0 + i * length);
-                g.DrawLine(Pens.Black, (400 + i * width), 0, (400 + i * width), 0 + 32 * length);
+                g.DrawLine(Pens.Black, (500), 15 + i * length, (500 + 32 * width), 15 + i * length);
+                g.DrawLine(Pens.Black, (500 + i * width), 15, (500 + i * width), 15 + 32 * length);
             }
             //リソースを解放する
             g.Dispose();
@@ -279,8 +279,8 @@ namespace procon26_kyogi
                 click_down_flag = 0;
             }
 
-            g.DrawString(data[sum, 0].ToString("D"), fnt, Brushes.Blue, 850, 210);
-            g.DrawString(data[sum, 1].ToString("D"), fnt, Brushes.Blue, 870, 210);
+            g.DrawString(data[sum, 1].ToString("D"), fnt, Brushes.Blue, 850, 210);
+            g.DrawString(data[sum, 0].ToString("D"), fnt, Brushes.Blue, 870, 210);
             g.DrawString(data[sum, 3].ToString("D"), fnt, Brushes.Blue, 910, 210);
             if (data[sum, 2] == 0)
                 g.DrawString("H", fnt, Brushes.Blue, 890, 210);
@@ -414,17 +414,34 @@ namespace procon26_kyogi
         //反転
         private void button5_Click(object sender, EventArgs e)
         {
-            int[,] aaa = new int[8, 4];
-            //左半分と右半分を入れ替える
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 4; j++)
-                    aaa[i, j] = item[count, i, j];
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 4; j++)
-                    item[count, i, j] = item[count, i, 7 - j];
-            for (int i = 0; i < 8; i++)
-                for (int j = 0; j < 4; j++)
-                    item[count, i, 7 - j] = aaa[i, j];
+            if (data[sum, 3] % 180 == 0)
+            {
+                int[,] aaa = new int[8, 4];
+                //左半分と右半分を入れ替える
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 4; j++)
+                        aaa[i, j] = item[count, i, j];
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 4; j++)
+                        item[count, i, j] = item[count, i, 7 - j];
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 4; j++)
+                        item[count, i, 7 - j] = aaa[i, j];
+            }
+            else
+            {
+                int[,] aaa = new int[4, 8];
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 8; j++)
+                        aaa[i, j] = item[count, i, j];
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 8; j++)
+                        item[count, i, j] = item[count, 7 - i, j];
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 8; j++)
+                        item[count, 7 - i, j] = aaa[i, j];
+            }
+
 
             data[sum, 2]++;
             data[sum, 2] %= 2;
@@ -585,20 +602,23 @@ namespace procon26_kyogi
                 FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 StreamWriter sw = new StreamWriter(fs);
 
-                int datastorage = 0;
+                int datastorage = 0;    //石番号を元に戻すための変数
+                int skipcounter1 = 1;    //スキップ回数を数える
+                int skipcounter2 = 0;   //data[,4]の-1の個数をかぞえる
 
                 while (0 < data[0, 4]) //冒頭のスキップの処理が後述のwhile文だと上手くいかなかったのでこの文を追加
                 {
                     textBox4.Text += ("\r\n");
                     data[0, 4]--;
                     datastorage++;
+                    skipcounter1++;
                 }
                 data[0, 4] += datastorage;
 
                 for (int ij = 0; ij < pieces; ij++)
                 {
                     datastorage = 0;
-                    if (data[ij, 4] != -1)  //ピースが当てはめられていたら
+                    if (data[ij, 4] != -1) //ピースが当てはめられていたら
                     {
                         if (0 < ij)
                         {
@@ -607,39 +627,56 @@ namespace procon26_kyogi
                                 textBox4.Text += ("\r\n");
                                 data[ij, 4]--;
                                 datastorage++;
+                                skipcounter1++;
                             }
                             data[ij, 4] += datastorage;
                         }
                         for (int j = 0; j < 4; j++)   //テスト用に石番号も表示にはj<5、本来はj<4
                         {
-                            if (j != 2)
+                            if (j == 0)
                             {
-                                textBox4.Text += data[ij, j];
-                                if (j != 3)//j!=3
-                                {
-                                    textBox4.Text += string.Format(" ");
-                                }
-                                else if (j == 3)//j==3
-                                {
-                                    textBox4.Text += ("\r\n");
-                                }
+                                textBox4.Text += data[ij, 1];
+                                textBox4.Text += string.Format(" ");
                             }
+                            else if (j == 1)
+                            {
+                                textBox4.Text += data[ij, 0];
+                                textBox4.Text += string.Format(" ");
+                            }
+
                             else if (j == 2)
                             {
                                 if (data[ij, 2] == 0)
                                 {
-                                    textBox4.Text += ("H");
-                                    textBox4.Text += string.Format(" ");
+                                    textBox4.Text += ("H ");
                                 }
                                 else if (data[ij, 2] == 1)
                                 {
-                                    textBox4.Text += ("T");
-                                    textBox4.Text += string.Format(" ");
+                                    textBox4.Text += ("T ");
                                 }
                             }
-
+                            else if (j == 3)
+                            {
+                                textBox4.Text += data[ij, 3];
+                                textBox4.Text += ("\r\n");
+                            }
+                            /*else if (j == 4)
+                            {
+                                textBox4.Text += string.Format(" ");
+                                textBox4.Text += data[ij, 4];
+                                textBox4.Text += ("\r\n");
+                            }*/
                         }
                     }
+                    else if (data[ij, 4] == -1)  //ピースが当てはめられていなければ
+                    {
+                        skipcounter2++;
+                    }
+                }
+                skipcounter2 = skipcounter2 - skipcounter1;
+                while (0 < skipcounter2)
+                {
+                    textBox4.Text += ("\r\n");
                 }
 
                 sw.WriteLine(textBox4.Text);
