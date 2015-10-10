@@ -13,8 +13,8 @@ void screen(std::vector<std::vector<int> >);
 //•~’n‚Ì‹ó‚Ì—×Ú•Ó‚ğ”‚ğ•\¦
 void screen_v(std::vector<std::vector<int> >);
 //•~’n‚ÌêŠ‚ğ•Ô‚·
-void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v);
+void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v, std::vector<int>::iterator);
 //ˆêí—Ş‚Ìƒs[ƒX‚É‘Î‚µ‚Ä‚¢‚ë‚¢‚ë‚·
 void put(Piece& piece, Map& map);
 //•~‚«‹l‚ß‚ç‚ê‚é‚©”»’è‚µA•~‚«‹l‚ß‚ç‚ê‚éê‡‚Í•~‚«‹l‚ß‚Ä‚¢‚­
-bool check(Map&, Piece&, std::vector<std::vector<int> > );
+bool check(Map&, Piece&, std::vector<std::vector<int> >);

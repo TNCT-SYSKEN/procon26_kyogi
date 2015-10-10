@@ -105,10 +105,6 @@ void Map::updata_v(){
 	flag = 0;
 	//Ä‹Aˆ—‚Ì‚½‚ß‚Ì•Ï”
 	int vec[34][34] = { 0 };
-	/*int data[32][32];
-	for (int i = 0; i < 32; i++)
-	for (int j = 0; j < 32; j++)
-	data[i][j] = map[i][j];*/
 	for (int YY = 1; YY <= 32; YY++){
 		for (int XX = 1; XX <= 32; XX++)
 			if (map[YY][XX] == 0){
@@ -131,8 +127,6 @@ void Map::updata_v(){
 		if (flag == 1)
 			break;
 	}
-	for (int i = 0; i < (int)str.size(); i++)
-		std::cout << str[i];
 }
 
 /*

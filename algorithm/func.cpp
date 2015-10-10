@@ -33,12 +33,12 @@ void put(Piece& piece, Map& map){
 								v[1][i] = v[0][i];
 							v[0][4] = t;
 							v[0][5] = k;
-							search_adress(map, piece, v);
+							search_adress(map, piece, v, ite);
 						}
 						else if (v[1][4] < t){
 							v[0][4] = t;
 							v[0][5] = k;
-							search_adress(map, piece, v);
+							search_adress(map, piece, v, ite);
 						}
 						break;
 					}
@@ -47,8 +47,6 @@ void put(Piece& piece, Map& map){
 			}
 		}
 	}
-
-
 
 	//•~‚¯‚é‚©”»’è
 	for (int i = 0; i < (int)v.size(); i++)
@@ -92,8 +90,43 @@ bool check(Map& map, Piece& piece, std::vector<std::vector<int> > v){
 	return true;
 }
 
-void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v){
-
+void search_adress(Map& map, Piece& piece, std::vector<std::vector<int> > v, std::vector<int>::iterator ite){
+	int begin_match = ite - map.str.begin();
+	int y = map.Y;
+	int x = map.X;
+	int old, now;
+	for (int i = 1; i < begin_match; i++){
+		old = map.str[i + begin_match - 1];
+		now = map.str[i + begin_match];
+		//ˆê’¼ü
+		if (old == now){
+			if (now == 1)
+				x++;
+			else if (now == 2)
+				y--;
+			else if (now == 3)
+				y++;
+			else
+				x--;
+		}//“Ê
+		else if (old == 3 && now == 4){
+			y--;
+			x--;
+		}
+		else if (old == 4 && now == 2){
+			y++;
+			x--;
+		}
+		else if (old == 2 && now == 1){
+			y++;
+			x++;
+		}
+		else if (old == 1 && now == 3){
+			y--;
+			x++;
+		}
+		//‰š‚Í•Ï‚í‚ç‚È‚¢‚Ì‚Å‚È‚µ
+	}
 }
 
 void screen(std::vector<std::vector<int> > map){
