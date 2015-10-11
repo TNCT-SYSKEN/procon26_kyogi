@@ -689,6 +689,7 @@ namespace procon26_kyogi
                 while (0 < skipcounter2)
                 {
                     textBox4.Text += ("\r\n");
+                    skipcounter2--;
                 }
 
                 sw.WriteLine(textBox4.Text);
