@@ -30,10 +30,6 @@ public:
 	//隣接数の更新
 	void updata_v();
 
-	//文字列化用, 一番外側も
-	void search_first(int, int, int [][34], int);
-	void search(int, int, int [][34], int);
-
 	/*敷いていく用*/
 	//敷くことができれば敷く
 	bool lay(Piece, int, int, int);

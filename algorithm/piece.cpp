@@ -4,7 +4,6 @@
 #include "piece.h"
 
 void Piece::piece_update(){
-	str.clear();
 	int y, x;
 	for (int i = 0; i < 8; i++){
 		int j;
@@ -17,58 +16,6 @@ void Piece::piece_update(){
 		}
 		if (j != 8)
 			break;
-	}
-	int v[8][8] = { 0 };
-	search(y, x, v, 3);
-}
-
-/*
-	1
- 3□2
-	4
-*/
-void Piece::search(int y, int x, int v[][8], int way){
-	if (v[y][x] == 1)
-		return;
-	v[y][x] = 1;
-	//wayの向き:下から来た場合は1、つまり前の動作は下向きのとき
-	//上
-	if (way == 3 || way == 1){
-		if (y > 0 && parts[y - 1][x] != 0)
-			search(y - 1, x, v, 4);
-		else
-			str.push_back(1);
-	}
-	//右
-	if (way != 4){
-		if (x < 7 && parts[y][x + 1] != 0)
-			search(y, x + 1, v, 3);
-		else
-			str.push_back(2);
-	}
-	//下
-	if (y < 7 && parts[y + 1][x] != 0)
-		search(y + 1, x, v, 1);
-	else
-		str.push_back(4);
-	//左
-	if (x > 0 && parts[y][x - 1] != 0)
-		search(y, x - 1, v, 2);
-	else
-		str.push_back(3);
-
-	//左、下から来た場合の上の判定のタイミング
-	if (way == 4 || way == 2){
-		if (y > 0 && parts[y - 1][x] != 0)
-			search(y - 1, x, v, 4);
-		else
-			str.push_back(1);
-	}
-	if (way == 4){
-		if (x < 7 && parts[y][x + 1] != 0)
-			search(y, x + 1, v, 3);
-		else
-			str.push_back(2);
 	}
 }
 

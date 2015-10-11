@@ -20,6 +20,4 @@ public:
 	void routen(int);
 	//•¶š—ñ‚ÌXV
 	void piece_update();
-	//Ä‹A(1‚ÌêŠ‚ğ’Tõ
-	void search(int, int, int[][8], int);
 };
